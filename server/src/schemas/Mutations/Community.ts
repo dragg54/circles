@@ -3,23 +3,32 @@ import { Community } from "../../models/Community"
 import { CommunityType } from "../Typedefs/Community"
 import { NotFoundError } from "../../types/Error"
 import { IUser } from "../../types/User"
-import { IContext } from "../../types/Context"
+import { Context } from "../../types/Context"
+import { GetCommunitiesById } from "../Queries/Community"
 
 export const CreateCommunity = {
     type: CommunityType,
     args: {
-        parentCommunityId: { type: GraphQLID },
-        title: { type: GraphQLString },
-        body: { type: GraphQLString }
+        parentCommunityId: { type: GraphQLID! },
+        communityName: { type: GraphQLString! },
+        communityDescription: { type: GraphQLString! }
     },
-    resolve(parent: string, args: { title: string, body: string, parentCommunityId: string, author: string }, context: any) {
+    resolve(parent: string, args: { communityName: string, communityDescription: string, parentCommunityId: string, author: string }, context: any) {
+        console.log(args)
+       try{
         const community = new Community({
             parentCommunityUniqueReferenceNumber: args.parentCommunityId,
-            title: args.title,
-            body: args.body,
+            communityName: args.communityName,
+            communityDescription: args.communityDescription,
             createdAt: Date.now(),
             createdBy: null
         })
+        return community.save()
+       }
+       catch(err){
+        console.log(err)
+        return new Error("Internal Server Error")
+       }
     }
 }
 
@@ -27,10 +36,10 @@ export const UpdateCommunity = {
     type: CommunityType,
     args: {
         id: { type: GraphQLID },
-        title: { type: GraphQLString },
-        body: { type: GraphQLString }
+        communityName: { type: GraphQLString },
+        communityDescription: { type: GraphQLString }
     },
-    async resolve(parent: any, args: { id: string, title: string, body: string }, context: any) {
+    async resolve(parent: any, args: { id: string, communityName: string, communityDescription: string }, context: any) {
         try {
             await Community.updateOne({
                 _id: args.id
@@ -49,13 +58,9 @@ export const DeleteCommunity = {
     args: {
         id: { type: GraphQLID },
     },
-    async resolve(parent: any, args: { id: string }, context: IContext) {
+    async resolve(parent: any, args: { id: string }, context: Context) {
         try {
             const community = await Community.findOne({_id: args.id})
-            if(community && community.createdBy  == context.user.id){
-                const errMsg = "user unauthorized to make this request"
-                throw new Error(errMsg)
-            }
             await Community.deleteOne({
                 _id: args.id
             })
@@ -70,15 +75,17 @@ export const DeleteCommunity = {
 export const AddCommunityMembers = {
     type: CommunityType,
     args: {
-        userId: { type: GraphQLID },
-        communityId: { type: GraphQLID }
+        userId: { type: GraphQLID!},
+        communityId: { type: GraphQLID! }
     },
     async resolve(parent: any, args: any) {
         try {
-            const community = await Community.findOne({ id: args.communityId })
+            const community = await Community.findOne({ _id: args.communityId })
+            const userName = await Community.findOne({_id: args.userId})
             if (community) {
-                community.communityMembers[community.communityMembers.length] = args.userId
-                return community.save()
+                const communityMembers = community.communityMembers
+                const newCommunityMembers = [...communityMembers, args.userId]
+                return Community.findOneAndUpdate({_id: args.communityId}, {communityMembers: newCommunityMembers})
             }
             else {
                 throw new NotFoundError("Community not found")
@@ -94,20 +101,17 @@ export const AddCommunityMembers = {
 export const RemoveCommunityMember = {
     type: GraphQLString,
     args: {
-        userid: { type: GraphQLString },
-        communityId: { type: GraphQLString }
+        userId: { type: GraphQLID },
+        communityId: { type: GraphQLID }
     },
-    async resolve(parent: any, args: any, context: IContext) {
+    async resolve(parent: any, args: any) {
         try {
-            const community = await Community.findOne({ id: args.communityId })
+            const community = await Community.findOne({_id: args.communityId })
             if (community) {
-                if(context.user._id !== community.createdBy){
-                    const errMsg = "request unauthorized"
-                    throw new Error(errMsg)
-                }
-                const userIdx: number = community?.communityMembers.findIndex((usr: any) => usr._id == args.userId)!
+                const userIdx: number = community?.communityMembers.findIndex((usr: any) => usr == args.userId)!
                 community.communityMembers.splice(userIdx, 1)
-                Community.findOneAndReplace({ communityMembers: community.communityMembers })
+                console.log(community.communityMembers)
+                await Community.findOneAndUpdate({_id: args.communityId}, {communityMembers: community.communityMembers })
                 return "User removed"
             }
         }

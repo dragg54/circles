@@ -6,5 +6,8 @@ export const CommunityType = new GraphQLObjectType({
         communityName:{
             type: GraphQLString
         },
+        communityDescription:{
+            type: GraphQLString
+        }
     }
 })

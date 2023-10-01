@@ -2,15 +2,21 @@ import mongoose from "mongoose"
 import { User, UserSchema } from "./User"
 
 const PostSchema = new mongoose.Schema({
-    parentPostUniqueReferenceNumber:{
+    parentPostId:{
         default: null,
         type: mongoose.Schema.ObjectId
     },
     topic:{
-        type: String
+        type: String,
+        required: true
     },
     body:{
-        type: String
+        type: String,
+        required: true
+    },
+    communityId:{
+        type: mongoose.Schema.ObjectId,
+        required: true
     },
     likedBy:{
        type: [UserSchema]

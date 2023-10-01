@@ -8,10 +8,15 @@ import jwt from 'jsonwebtoken'
 import { verify } from './utils/Verify'
 import { UserLoginRequest, UserLoginResponse } from './types/User'
 import bodyParser from 'body-parser'
+import path from 'path'
+import { applyMiddleware } from 'graphql-middleware'
+import { middleWare } from './middlewares'
+import morgan from 'morgan'
 
 
 const app = express()
 
+app.use(morgan('tiny'));
 app.use(cors({
     origin: "http://localhost:3000"
 }))
@@ -20,14 +25,15 @@ connectDb()
 
 
 const { graphqlUploadExpress} = require('graphql-upload')
+app.use('/', (express.static(path.join(__dirname, 'upload'))))
+const schemaWithMiddleware = applyMiddleware(schema, middleWare)
 app.use("/graphql",
 graphqlUploadExpress({ maxFileSize: 2000000, maxFiles: 10 }),
 graphqlHTTP((req, res)=>{
 return{
-    schema,
+    schema: schemaWithMiddleware,
     graphiql: true,
         context: () => {
-        verify(req as UserLoginRequest, res as UserLoginResponse)
         return {req, res}
     }
 }}))

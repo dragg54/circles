@@ -1,7 +1,7 @@
 import { GraphQLSchema, GraphQLObjectType } from 'graphql'
 import { CreateUser, LoginUser } from './Mutations/User'
 import { GetPosts, GetPostsById, GetPostsByUserId } from './Queries/Post'
-import { CreatePost, UpdatePost } from './Mutations/Post'
+import { CreatePost, DeletePost, UpdatePost } from './Mutations/Post'
 import { AddCommunityMembers, CreateCommunity, DeleteCommunity, RemoveCommunityMember, UpdateCommunity } from './Mutations/Community'
 import { GetCommunities } from './Queries/Community'
 
@@ -18,8 +18,9 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: "Mutation",
     fields: {
-        // createPost: CreatePost,
+        createPost: CreatePost,
         createUser: CreateUser,
+        deletePost: DeletePost,
         loginUser: LoginUser,
         updatePost: UpdatePost,
         createCommunity: CreateCommunity,

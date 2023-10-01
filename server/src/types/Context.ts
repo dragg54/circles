@@ -1,5 +1,4 @@
+import { Request, Response } from "express";
 import { IUser } from "./User";
 
-export interface IContext{
-    user: IUser
-}
+export type Context =() => {req: Request, res: Response}

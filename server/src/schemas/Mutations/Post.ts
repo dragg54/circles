@@ -9,17 +9,30 @@ export const CreatePost = {
     type: PostType,
     args:{
         parentPostId: {type: GraphQLID},
-        title:{type: GraphQLString},
-        body: {type: GraphQLString}
+        topic:{type: GraphQLString},
+        body: {type: GraphQLString},
+        communityId: {type: GraphQLID},
+        createdBy: {type: GraphQLID},
+        updatedBy : {type: GraphQLID},
     },
-    resolve(parent: string, args: {title: string, body: string, parentPostId: string, author: string}, context: any){
-       const post = new Post({
+    resolve(parent: string, args: {topic: string, body: string, parentPostId: string, author: string, communityId: string, createdBy: string, updatedBy: string}, context: any){
+       try{
+        const post = new Post({
             parentPostUniqueReferenceNumber: args.parentPostId,
-            title: args.title,
+            topic: args.topic,
             body: args.body,
+            communityId: args.communityId,
             createdAt: Date.now(),
-            createdBy:null
+            updaedAt: null,
+            createdBy: args.createdBy,
+            updatedBy: args.updatedBy
         })
+        return post.save()
+       }
+       catch(err){
+        console.log(err)
+        return new InternalServerError(err as string)
+       }
     }
 }
 
@@ -27,10 +40,10 @@ export const UpdatePost = {
     type: PostType,
     args:{
         id: {type: GraphQLID},
-        title: {type: GraphQLString},
+        topic: {type: GraphQLString},
         body: {type: GraphQLString}
     },
-    async resolve(parent: any, args: {id: string, title:string, body: string}, context: any){
+    async resolve(parent: any, args: {id: string, topic:string, body: string}, context: any){
         try{
             await Post.updateOne({
                 _id: args.id
@@ -45,6 +58,7 @@ export const UpdatePost = {
 
 
 export const DeletePost = {
+    type: PostType,
     args:{
         id: {type: GraphQLID},
     },
@@ -78,4 +92,5 @@ export const AddLikes = {
         }
     }
 }
+
 

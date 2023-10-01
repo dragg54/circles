@@ -4,8 +4,9 @@ export const PostType = new GraphQLObjectType({
     name: "Post",
     fields:{
         author: {type: GraphQLID},
-        parentPost: {type: GraphQLID},
-        title: {type: GraphQLString},
+        parentPostId: {type: GraphQLID},
+        communityId: {type: GraphQLID},
+        topic: {type: GraphQLString},
         body: {type: GraphQLString}
     }
 })
