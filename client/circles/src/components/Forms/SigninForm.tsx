@@ -1,0 +1,51 @@
+import { useMutation } from '@apollo/client'
+import React, { ChangeEvent, useState } from 'react'
+import { LoginUser } from '../../graphql/mutations/user'
+import { useNavigate } from 'react-router-dom'
+import Form from './Form'
+import SubmitButton from '../Buttons/SubmitButton'
+
+export const SigninForm = () =>{
+    interface LoginType extends   HTMLInputElement {
+      email?: string,
+      password?: string
+    }
+    const [ loginUserMutation ] =  useMutation(LoginUser)
+    const [loginDetails, setLoginDetails ] = useState({email: "", password: ""})
+  
+    function handleformChange(e: ChangeEvent<HTMLInputElement>){
+      e.preventDefault()
+      const {value, name} = e.target as LoginType
+      setLoginDetails({...loginDetails, [name]: value})
+    }
+    const handleMutation = async() =>{
+    try {
+      const result =  await loginUserMutation({
+        variables: {
+          email: loginDetails.email,
+          password: loginDetails.password
+        },
+      });
+      const response = result.data.loginUser
+     if(response && response.status == "OK"){
+      localStorage.setItem("auth", JSON.stringify(response.token))
+      navigate("/")
+     }
+    } catch (e) {
+      // Handle errors
+      console.error('Mutation error:', e);
+    }  }
+    const navigate = useNavigate()
+    return(
+     <Form>
+       <div className='w-full  flex flex-col gap-3'>
+    <h1 className='self-start text-4xl font-extrabold w-full border-b  border-gray-300 py-3'>Sign in</h1>
+      <input type="text" name="email" id="" placeholder='Email' onChange={handleformChange} value={loginDetails.email}/>
+      <input type="password" name="password" id="" placeholder='Password' value={loginDetails.password} onChange={handleformChange}/>
+      <SubmitButton name="LOGIN" handleSubmit={handleMutation}/> 
+    </div>
+     </Form>
+    )
+}
+
+export default SigninForm

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { SignupForm } from '../components/Form'
+import SignupForm from '../components/Forms/SignupForm'
 
 const Signup = () => {
  const [page, setPage] = useState(1)

@@ -2,7 +2,6 @@ import { Context } from "../types/Context";
 import { verify } from "../utils/Verify";
 
 export const IsAuthenticated = async (resolve:any,root: any,  args: any, context: any) =>{
-    console.log("hello")
     verify(context().req, context().res)
     args.createdBy = context().req.user.id 
     args.updatedBy = context().req.user.id 

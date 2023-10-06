@@ -6,10 +6,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { globalModalState } from './types/GlobalModalState'
 import { useRef } from 'react'
 import { isClosed } from './redux/GlobalModalReducer'
-import { CreatePostForm } from './components/Form'
 import Post from './pages/Post'
 import Signup from './pages/Signup'
 import Signin from './pages/Signin'
+import PostForm from './components/Forms/PostForm'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 function App() {
@@ -27,7 +27,7 @@ function App() {
     <body className={`relative ${globalModal.isOpened ? 'h-screen' : 'h-auto'} ${globalModal.isOpened ? 'overflow-hidden' : 'h-auto'}`}>
       <div className={`absolute ${globalModal.isOpened ? 'flex' : 'hidden'} bg-[rgba(220,220,220,0.7)]  w-screen z-30  h-screen justify-center pt-24 items-start`} id='modal'>
         <div className='w-2/5'>
-          {globalModal.formName == "CreatePost" ? <CreatePostForm /> : ""}
+          {globalModal.formName == "CreatePost" ? <PostForm /> : ""}
         </div>
       </div>
         <Router>
