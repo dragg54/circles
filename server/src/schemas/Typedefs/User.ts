@@ -17,6 +17,9 @@ export const UserType = new GraphQLObjectType({
 export const UserLoginResponse = new GraphQLObjectType({
     name: "UserLoginResponse",
     fields: {
-        token: {type: GraphQLString}
+        token: {type: GraphQLString},
+        status: {type: GraphQLString}
+        // profilePicture: {type: GraphQLString},
+        // email: {type: GraphQLString}
     }
 })

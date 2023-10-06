@@ -1,9 +1,10 @@
 import { Response, Request } from "express"
 import { JwtPayload } from "jsonwebtoken"
+import mongoose from "mongoose"
 
 export interface IUser{
     id?:string,
-    _id?: string,
+    _id?: typeof mongoose.Schema.ObjectId,
     userName: string,
     profilePicture?: Buffer,
     email: string,

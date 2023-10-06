@@ -8,7 +8,8 @@ const CommunityMemberSchema = new mongoose.Schema({
 
 const CommunitySchema = new mongoose.Schema({
     communityName: {
-        type: String
+        type: String,
+        required: true
     },
     communityMembers:{
         type: [CommunityMemberSchema],

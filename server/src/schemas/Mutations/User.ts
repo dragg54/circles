@@ -11,6 +11,7 @@ import { readFile } from "../../middlewares/file";
 import { ImageType } from "../Typedefs/Image";
 import { createReadStream } from "fs";
 import { Context } from "../../types/Context";
+import { getUser } from "../../utils/GetCurrentUser";
 
 const { GraphQLUpload, FileUpload } = require('graphql-upload')
 export const CreateUser = {
@@ -75,12 +76,16 @@ export const LoginUser = {
             if (!isMatch) {
                 throw new Error("Password is incorrect")
             }
-            return { token: jwt.sign({ id: existingUser._id, email: existingUser.email, userName: existingUser.userName, bio: existingUser.bio }, process.env.SECRET_KEY!) }
+            const token = jwt.sign({ id: existingUser._id, email: existingUser.email, userName: existingUser.userName, bio: existingUser.bio }, process.env.SECRET_KEY!)
+            context().res.cookie('auth', token, { maxAge: 3600000, httpOnly: true, sameSite:"lax"})
+            return {status: "OK", token}
         }
         catch (err) {
             console.log(err)
         }
     }
 }
+
+
 
 

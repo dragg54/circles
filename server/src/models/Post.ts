@@ -1,14 +1,15 @@
 import mongoose from "mongoose"
 import { User, UserSchema } from "./User"
+import { truncate } from "fs/promises"
 
 const PostSchema = new mongoose.Schema({
     parentPostId:{
         default: null,
-        type: mongoose.Schema.ObjectId
+        type: mongoose.Schema.ObjectId,
     },
     topic:{
         type: String,
-        required: true
+        required: true,
     },
     body:{
         type: String,

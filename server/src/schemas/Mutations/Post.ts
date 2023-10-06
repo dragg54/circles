@@ -4,6 +4,8 @@ import { Post } from '../../models/Post'
 import { request, response } from "express";
 import { UserLoginRequest } from "../../types/User";
 import { InternalServerError } from "../../types/Error";
+import { Community } from "../../models/Community";
+import { ICommunity } from "../../types/ICommunity";
 
 export const CreatePost = {
     type: PostType,
@@ -11,19 +13,21 @@ export const CreatePost = {
         parentPostId: {type: GraphQLID},
         topic:{type: GraphQLString},
         body: {type: GraphQLString},
-        communityId: {type: GraphQLID},
+        communityName: {type: GraphQLString},
         createdBy: {type: GraphQLID},
         updatedBy : {type: GraphQLID},
     },
-    resolve(parent: string, args: {topic: string, body: string, parentPostId: string, author: string, communityId: string, createdBy: string, updatedBy: string}, context: any){
+    async resolve(parent: string, args: {topic: string, body: string, parentPostId: string, author: string, communityName: string, createdBy: string, updatedBy: string}, context: any){
+        console.log(args)
        try{
+        const community:unknown = await Community.findOne({communityName: args.communityName});
         const post = new Post({
-            parentPostUniqueReferenceNumber: args.parentPostId,
+            parentPostId: args.parentPostId,
             topic: args.topic,
             body: args.body,
-            communityId: args.communityId,
+            communityId: (community as ICommunity)._id,
             createdAt: Date.now(),
-            updaedAt: null,
+            updatedAt: null,
             createdBy: args.createdBy,
             updatedBy: args.updatedBy
         })
@@ -31,7 +35,7 @@ export const CreatePost = {
        }
        catch(err){
         console.log(err)
-        return new InternalServerError(err as string)
+        throw new InternalServerError(err as string)
        }
     }
 }
