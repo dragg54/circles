@@ -1,5 +1,5 @@
 import { renderGraphiQL } from "express-graphql/renderGraphiQL";
-import { GraphQLObjectType, GraphQLString } from "graphql";
+import { GraphQLObjectType, GraphQLString, graphql } from "graphql";
 import { IUser } from "../../types/User";
 import GraphQLUpload from 'graphql-upload'
 
@@ -19,7 +19,5 @@ export const UserLoginResponse = new GraphQLObjectType({
     fields: {
         token: {type: GraphQLString},
         status: {type: GraphQLString}
-        // profilePicture: {type: GraphQLString},
-        // email: {type: GraphQLString}
     }
 })

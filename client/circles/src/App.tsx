@@ -1,15 +1,13 @@
 import './App.css'
-import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
-import Layout from './components/Layout'
-import { useDispatch, useSelector } from 'react-redux'
 import { globalModalState } from './types/GlobalModalState'
-import { useRef } from 'react'
-import { isClosed } from './redux/GlobalModalReducer'
-import Post from './pages/Post'
 import Signup from './pages/Signup'
 import Signin from './pages/Signin'
 import PostForm from './components/Forms/PostForm'
+import { useDispatch, useSelector } from 'react-redux'
+import { isClosed } from './redux/GlobalModal'
+import Post from './components/Post'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 function App() {

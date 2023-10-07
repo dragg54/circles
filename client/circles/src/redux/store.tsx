@@ -1,10 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import GlobalModalReducer from './GlobalModalReducer';
+import GlobalModalSlice from './GlobalModal';
+import AuthSlice from './Auth';
+import PostSlice from './Post'
 
 const store = configureStore({
   reducer: {
-    globalModal: GlobalModalReducer,
-  },
+    globalModal: GlobalModalSlice,
+    auth: AuthSlice,
+    post: PostSlice
+  }, devTools: true
 });
 
 export default store;

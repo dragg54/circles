@@ -3,7 +3,7 @@ import SubmitButton from '../Buttons/SubmitButton'
 import Form from './Form'
 import { useNavigate } from 'react-router-dom'
 
-export const SignupForm = ({page, setPage}) => {
+export const SignupForm = ({page, setPage}: {page: number, setPage: React.Dispatch<React.SetStateAction<number>>}) => {
     return (
       <Form>
         {page==1?<Bio {...{page, setPage}}/> : <ChooseCommunity {...{page, setPage}}/>}

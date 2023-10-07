@@ -4,6 +4,14 @@ import { LoginUser } from '../../graphql/mutations/user'
 import { useNavigate } from 'react-router-dom'
 import Form from './Form'
 import SubmitButton from '../Buttons/SubmitButton'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchAuth } from '../../redux/Auth'
+import { IUser } from '../../types/User'
+
+type UserState = {
+  user: IUser
+}
+
 
 export const SigninForm = () =>{
     interface LoginType extends   HTMLInputElement {
@@ -12,6 +20,8 @@ export const SigninForm = () =>{
     }
     const [ loginUserMutation ] =  useMutation(LoginUser)
     const [loginDetails, setLoginDetails ] = useState({email: "", password: ""})
+    const currentUser = useSelector(state => (state as UserState).user)
+    const dispatch = useDispatch()
   
     function handleformChange(e: ChangeEvent<HTMLInputElement>){
       e.preventDefault()
@@ -28,6 +38,8 @@ export const SigninForm = () =>{
       });
       const response = result.data.loginUser
      if(response && response.status == "OK"){
+      dispatch(fetchAuth({token: response.token}))
+
       localStorage.setItem("auth", JSON.stringify(response.token))
       navigate("/")
      }

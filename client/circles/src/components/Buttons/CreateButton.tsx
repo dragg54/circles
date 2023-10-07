@@ -1,7 +1,7 @@
 import React from 'react'
 import Button from './index'
 import { useDispatch } from 'react-redux'
-import { isOpened } from '../../redux/GlobalModalReducer'
+import { isOpened } from '../../redux/GlobalModal'
 import { BiPlus } from 'react-icons/bi'
 
 const CreateButton = () => {

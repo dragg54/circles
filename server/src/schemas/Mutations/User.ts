@@ -76,7 +76,7 @@ export const LoginUser = {
             if (!isMatch) {
                 throw new Error("Password is incorrect")
             }
-            const token = jwt.sign({ id: existingUser._id, email: existingUser.email, userName: existingUser.userName, bio: existingUser.bio }, process.env.SECRET_KEY!)
+            const token = jwt.sign({ id: existingUser._id, email: existingUser.email, userName: existingUser.userName, bio: existingUser.bio, profilePictue: existingUser.profilePicture }, process.env.SECRET_KEY!)
             context().res.cookie('auth', token, { maxAge: 3600000, httpOnly: true, sameSite:"lax"})
             return {status: "OK", token}
         }

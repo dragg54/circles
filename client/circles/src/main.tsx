@@ -4,7 +4,7 @@ import App from './App.tsx'
 import './index.css'
 import { Provider } from 'react-redux'
 import store from './redux/store.tsx'
-import { client } from './graphql/client.tsx'
+import { client } from './graphql/client.ts'
 import { ApolloProvider } from '@apollo/client'
 
 

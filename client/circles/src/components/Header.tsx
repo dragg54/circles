@@ -29,19 +29,19 @@ const Header = () => {
     )
 }
 
-const CommunityList = () => {
-    const communities = ["Politics", "Music", "Sport", "Entertainment", "Tech", "Business", "Education", "Movie"]
-    return (
-        <div>
-            {communities.map((community: string) => {
-                return (
-                    <div className='width-full p-3 bg-white'>
-                        <p>{community}</p>
-                    </div>
-                )
-            })}
-        </div>
-    )
-}
+// const CommunityList = () => {
+//     const communities = ["Politics", "Music", "Sport", "Entertainment", "Tech", "Business", "Education", "Movie"]
+//     return (
+//         <div>
+//             {communities.map((community: string) => {
+//                 return (
+//                     <div className='width-full p-3 bg-white'>
+//                         <p>{community}</p>
+//                     </div>
+//                 )
+//             })}
+//         </div>
+//     )
+// }
 
 export default Header
