@@ -5,21 +5,35 @@ import { CreatePostMutation } from '../../graphql/mutations/post'
 import Form from './Form'
 import CommunityModal from '../Modals/CommunityModal'
 import SubmitButton from '../Buttons/SubmitButton'
+import { useDispatch, useSelector } from 'react-redux'
+import { addPost } from '../../redux/Post'
+import { AuthState } from '../../types/States'
+import { isClosed } from '../../redux/GlobalModal'
 
-type NewPost = Omit<IPost, 'createdBy'| 'createdAt'| 'updatedAt'| 'updatedBy' | 'likedBy' | 'dislikedBy'>
 
 const PostForm = () => {
-    const [formObj, setFormObj] = useState<NewPost>({
-        postId: "",
+    const currentUser = useSelector(state => (state as AuthState).auth)
+    const [formObj, setFormObj] = useState<IPost>({
+        postId: null,
         parentPostId: "",
         topic: "",
         body: "",
         communityName: "",
         error: '',
+        userName: currentUser.userName,
+        likedBy: [],
+        createdBy: currentUser.id,
+        createdAt: Date.now(),
+        dislikedBy: [],
+        updatedAt: null,
+        updatedBy: null,
     })
     interface PostType extends HTMLInputElement, IPost {
 
     }
+
+    const dispatch = useDispatch()
+    const dispatchModal = useDispatch()
     function handleformChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
         e.preventDefault()
         const { value, name } = e.target as PostType
@@ -42,10 +56,10 @@ const PostForm = () => {
                 },
             });
             const response = result.data
-            console.log(response)
+            dispatch(addPost({post: formObj}))
+            dispatchModal(isClosed())
         } catch (e) {
             console.error('Mutation error:', e);
-            console.log("error", error)
         }
     }
     return (

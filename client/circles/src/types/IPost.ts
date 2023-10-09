@@ -1,16 +1,20 @@
 
 export interface IPost{
-    postId: string,
+    postId: number,
     parentPostId: string,
     topic: string
     body: string,
     communityName:string
-    error:'',
-    likedBy:string
-    dislikedBy:string
+    error: string,
+    userName: string,
+    likedBy: []
+    dislikedBy:[]
     createdBy:string
-    createdAt:string
-    updatedBy:string
-    updatedAt:string
+    createdAt:number | null
+    updatedBy:string | null
+    updatedAt:number | null
 }
+
+export type NewPost = Omit<IPost, 'createdBy'| 'createdAt'| 'updatedAt'| 'updatedBy' | 'likedBy' | 'dislikedBy'>
+
 

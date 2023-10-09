@@ -22,7 +22,7 @@ const Header = () => {
             </div>
             <div className='w-1/3 flex justify-end gap-4 items-center'>
                 <PiBellThin className='w-8 h-8 font-light text-gray-500' />
-                <ProfilePicture />
+                <ProfilePicture/>
                 <CreateButton />
             </div>
         </div>

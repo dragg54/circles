@@ -7,7 +7,7 @@ import Signin from './pages/Signin'
 import PostForm from './components/Forms/PostForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { isClosed } from './redux/GlobalModal'
-import Post from './components/Post'
+import Post from './pages/Post'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 function App() {

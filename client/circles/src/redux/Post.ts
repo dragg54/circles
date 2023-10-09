@@ -4,30 +4,35 @@ import { IPost } from "../types/IPost";
 const postSlice = createSlice({
     name: 'user',
     initialState: [{
-        postId: '',
+        postId: null,
         parentPostId: '',
         topic: '',
         body: '',
         communityName: '',
+        userName: '',
         error: '',
-        likedBy: '',
-        dislikedBy: '',
+        likedBy: [],
+        dislikedBy: [],
         createdBy: '',
-        createdAt: '',
+        createdAt: null,
         updatedBy: '',
-        updatedAt: ''
+        updatedAt: null
     }],
     reducers: {
-        fetchPost: (_, action: { payload: { post: IPost  } }) => {
+        fetchPost: (_, action: { payload: { post:  IPost  } }) => {
             return [action.payload.post]
         },
         addPost: (state, action: { payload:{post: IPost}}) =>{
            const newPost = action.payload.post
-           newPost.postId = state[state.length - 1].postId
-           newPost.createdBy = ""
-           newPost.createdAt = ""
+           const lastPostId = state[state.length - 1].postId
+           if(lastPostId){
+            newPost.postId = Number(lastPostId) + 1
+           }
+           else{
+            newPost.postId = 1
+           }
            return [...state, newPost]
-        }
+        },
     },
 });
 

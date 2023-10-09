@@ -4,7 +4,7 @@ import jwt_decode from 'jwt-decode';
 
 const authSlice = createSlice({
     name: 'auth',
-    initialState: {userName: "", profilePicture: "", token: ""},
+    initialState: {id:"",userName: "", profilePicture: "", token: ""},
     reducers: {
       fetchAuth: (_, action: {payload: {token: string}}) =>{
         const user = jwt_decode(action.payload.token)

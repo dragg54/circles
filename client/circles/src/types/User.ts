@@ -1,4 +1,5 @@
 export interface UserAuth{
+    id: string,
     token: string,
     userName: string,
     profilePicture: string,
@@ -7,7 +8,6 @@ export interface UserAuth{
 }
 
 export interface IUser extends UserAuth{
-    id:string,
     communities: [],
     following: [],
     followers: [],
