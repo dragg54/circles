@@ -8,8 +8,6 @@ const Home = () => {
      <main className='w-screen h-auto flex flex-col justify-start items-center mt-32'>
       <div className='w-full flex flex-col justify-start items-center'>
         <Post />
-        <Post />
-        <Post />
       </div>
     </main>
    </Layout>

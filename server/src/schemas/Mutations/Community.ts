@@ -15,20 +15,20 @@ export const CreateCommunity = {
     },
     resolve(parent: string, args: { communityName: string, communityDescription: string, parentCommunityId: string, author: string }, context: any) {
         console.log(args)
-       try{
-        const community = new Community({
-            parentCommunityUniqueReferenceNumber: args.parentCommunityId,
-            communityName: args.communityName,
-            communityDescription: args.communityDescription,
-            createdAt: Date.now(),
-            createdBy: null
-        })
-        return community.save()
-       }
-       catch(err){
-        console.log(err)
-        return new Error("Internal Server Error")
-       }
+        try {
+            const community = new Community({
+                parentCommunityUniqueReferenceNumber: args.parentCommunityId,
+                communityName: args.communityName,
+                communityDescription: args.communityDescription,
+                createdAt: Date.now(),
+                createdBy: null
+            })
+            return community.save()
+        }
+        catch (err) {
+            console.log(err)
+            return new Error("Internal Server Error")
+        }
     }
 }
 
@@ -60,7 +60,7 @@ export const DeleteCommunity = {
     },
     async resolve(parent: any, args: { id: string }, context: Context) {
         try {
-            const community = await Community.findOne({_id: args.id})
+            const community = await Community.findOne({ _id: args.id })
             await Community.deleteOne({
                 _id: args.id
             })
@@ -75,21 +75,19 @@ export const DeleteCommunity = {
 export const AddCommunityMembers = {
     type: CommunityType,
     args: {
-        userId: { type: GraphQLID!},
+        userId: { type: GraphQLID! },
         communityId: { type: GraphQLID! }
     },
     async resolve(parent: any, args: any) {
         try {
             const community = await Community.findOne({ _id: args.communityId })
-            const userName = await Community.findOne({_id: args.userId})
-            if (community) {
-                const communityMembers = community.communityMembers
-                const newCommunityMembers = [...communityMembers, args.userId]
-                return Community.findOneAndUpdate({_id: args.communityId}, {communityMembers: newCommunityMembers})
+            if (community.communityMembers.some((member) => member == args.userId)) {
+                throw new Error("User is already a member")
             }
-            else {
-                throw new NotFoundError("Community not found")
-            }
+            const communityMembers = community.communityMembers
+            const newCommunityMembers = [...communityMembers, args.userId]
+            return Community.findOneAndUpdate({ _id: args.communityId }, { communityMembers: newCommunityMembers })
+
         }
         catch (err) {
             console.log(err)
@@ -106,12 +104,12 @@ export const RemoveCommunityMember = {
     },
     async resolve(parent: any, args: any) {
         try {
-            const community = await Community.findOne({_id: args.communityId })
+            const community = await Community.findOne({ _id: args.communityId })
             if (community) {
                 const userIdx: number = community?.communityMembers.findIndex((usr: any) => usr == args.userId)!
                 community.communityMembers.splice(userIdx, 1)
                 console.log(community.communityMembers)
-                await Community.findOneAndUpdate({_id: args.communityId}, {communityMembers: community.communityMembers })
+                await Community.findOneAndUpdate({ _id: args.communityId }, { communityMembers: community.communityMembers })
                 return "User removed"
             }
         }

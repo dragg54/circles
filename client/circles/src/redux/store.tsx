@@ -3,26 +3,34 @@ import GlobalModalSlice from './GlobalModal';
 import AuthSlice from './Auth';
 import PostSlice from './Post'
 import UserSlice from './UserModal'
+import ResponseModalSlice from './ResponseModal';
 import storage from 'redux-persist/lib/storage'
-import { persistReducer } from 'redux-persist';
+import { persistReducer, persistStore } from 'redux-persist';
+import thunk from 'redux-thunk';
 
-
-const store = configureStore({
-  reducer: {
-    globalModal: GlobalModalSlice,
-    auth: AuthSlice,
-    post: PostSlice,
-    userModal: UserSlice
-  }, devTools: true
-});
 
 const persistConfig = {
   key: "root",
-  storage
+  storage,
+  blacklist: ['post', 'responseModal']
+
 }
 
-const reducer = combineReducers({
-
+const rootReducer = combineReducers({
+  globalModal: GlobalModalSlice,
+  auth: AuthSlice,
+  post: PostSlice,
+  userModal: UserSlice,
+  responseModal: ResponseModalSlice
 })
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+const store = configureStore({
+  reducer: persistedReducer, devTools: true,  middleware: [thunk]
+
+});
+
+export const persistor = persistStore(store)
 
 export default store;

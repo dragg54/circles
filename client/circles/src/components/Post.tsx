@@ -1,24 +1,51 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ProfilePicture from './ProfilePicture'
 import { LiaCommentAlt } from 'react-icons/lia'
 import { SlLike } from 'react-icons/sl'
 import { useNavigate } from 'react-router-dom'
+import { useQuery } from '@apollo/client'
+import { GET_ALL_POSTS } from '../graphql/queries/post'
+import { IPost } from '../types/IPost'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchPosts } from '../redux/Post'
+import { PostState } from '../types/States'
+
+type PostType = {
+        post: IPost[]
+}
 
 const Post = () => {
     const navigate = useNavigate()
-    function goToPost(){
+    function goToPost() {
         navigate("/post")
     }
+    const { data, error, loading } = useQuery(GET_ALL_POSTS)
+    const dispatch = useDispatch()
+    const posts = useSelector(state => (state as PostType).post)
+    useEffect(()=>{
+        dispatch(fetchPosts({posts: (data?.getPosts as PostState[])}))
+    }, [data, loading, error])
+    if (loading){
+        return <p>Loading</p>
+    }
+
+    console.log(posts)
     return (
-        <div onClick={goToPost} className='cursor-pointer w-1/2 bg-white rounded-md shadow-md p-4 h-auto mb-5 border-l-4 border-r border-t border-[#333A44] border-b-4 shadow-gray-400 '>
-            <PostHeader />
-            <PostTopic topic="How To Become A Leader"/>
-            <PostContent content="The purpose of becoming a leader should be to guide his or her followers to make a progress on something. According to Albert Einstein, knowing
-            the purpose of leadership should be the goal of a true leader."/>
-            <PostReactions />
-        </div>
-    )
+        <>
+        {!loading && posts &&  posts.map((post: IPost) => {
+            return (
+                <div key={post._id} onClick={goToPost} className='cursor-pointer w-1/2 bg-white rounded-md shadow-md p-4 h-auto mb-5 border-l-4 border-r border-t border-[#333A44] border-b-4 shadow-gray-400 '>
+                    <PostHeader />
+                    <PostTopic topic={post.topic} />
+                    <PostContent content={post.body} />
+                    <PostReactions />
+                </div>
+            )
+        })}
+        </>
+        )
 }
+
 
 const PostHeader = () => {
     return (
@@ -34,13 +61,13 @@ const PostHeader = () => {
     )
 }
 
-const PostTopic = ({topic}: {topic: string}) => {
+const PostTopic = ({ topic }: { topic: string }) => {
     return (
         <h1 className='text-lg font-bold'>{topic}</h1>
     )
 }
 
-const PostContent = ({content}: {content: string}) => {
+const PostContent = ({ content }: { content: string }) => {
     return (
         <p className='text-gray-500 w-full border-b border-gray-200 shadow-sm pb-4'>{content}
         </p>
@@ -62,23 +89,23 @@ const PostReactions = () => {
     )
 }
 
-export const ParentPost = ({topic, content}: {topic:string, content: string}) => {
+export const ParentPost = ({ topic, content }: { topic: string, content: string }) => {
     return (
         <div className='cursor-pointer w-full bg-white rounded-md shadow-md p-4 h-auto mb-5 border-l-4 border-r border-t border-[#333A44] border-b-4 shadow-gray-400 '>
             <PostHeader />
-            <PostTopic topic={topic}/>
-            <PostContent content={content}/>
+            <PostTopic topic={topic} />
+            <PostContent content={content} />
             <PostReactions />
         </div>
     )
 }
 
 
-export const ChildPost = ({topic, content}: {topic:string, content: string}) => {
+export const ChildPost = ({ topic, content }: { topic: string, content: string }) => {
     return (
         <div className='cursor-pointer w-11/12 self-end bg-white rounded-md shadow-md p-4 h-auto mb-5 border-l-4 border-r border-t border-[#333A44] border-b-4 shadow-gray-400 '>
             <PostHeader />
-            <PostContent content={content}/>
+            <PostContent content={content} />
             <PostReactions />
         </div>
     )

@@ -1,23 +1,19 @@
 import { GraphQLID, GraphQLList, GraphQLString } from "graphql";
-import { PostType } from "../Typedefs/Post";
+import { PostResponse, PostType } from "../Typedefs/Post";
 import { Post } from "../../models/Post";
 import { Context } from "../../types/Context";
 import { IPost } from "../../types/IPost";
 
 export const GetPosts = {
-    type: new GraphQLList(PostType),
-    args: {
-        communityIds: {type: new GraphQLList(GraphQLID)}
-    },
+    type: new GraphQLList(PostResponse),
     async resolve(parent:any, args: any, context: Context) {
         try {
-            const communityIds: unknown = args.communityIds
             let posts: IPost[];
             var allPosts: unknown | IPost[] = await Post.find()
-            if((communityIds as []).length > 0){
-                posts = (allPosts as [IPost]).filter((pst)=> posts.includes(pst!))
-                return posts;
-            }
+            .populate("user", "userName profilePicture")
+            .populate("community", "communityName")
+            // .limit(20)
+            .lean();
             return posts = allPosts as IPost[];
         }
         catch (err) {

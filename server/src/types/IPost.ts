@@ -6,6 +6,10 @@ export interface IPost{
     parentPostId?: string,
     topic?: string
     body?: string,
+    author?:{
+        id: typeof mongoose.Schema.ObjectId,
+        userName: string
+    }
     communityId?:string,
     likedBy?:string
     dislikedBy?:string

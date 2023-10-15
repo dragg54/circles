@@ -2,9 +2,19 @@ import mongoose from "mongoose"
 import { User, UserSchema } from "./User"
 import { truncate } from "fs/promises"
 
+const PostCommunity = {
+    id: {
+        type: mongoose.Schema.ObjectId,
+    },
+    name:{
+        type: String
+    }
+}
+
 const PostSchema = new mongoose.Schema({
     parentPostId:{
         default: null,
+        ref: "post",
         type: mongoose.Schema.ObjectId,
     },
     topic:{
@@ -15,10 +25,17 @@ const PostSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    communityId:{
+    community:{
         type: mongoose.Schema.ObjectId,
-        required: true
+        required: true,
+        ref: "community"
     },
+    user:{
+        type: mongoose.Schema.ObjectId,
+        required: true,
+        ref: "User"
+    },
+    
     likedBy:{
        type: [UserSchema]
     },
@@ -26,7 +43,8 @@ const PostSchema = new mongoose.Schema({
         type: [UserSchema]
     },
     createdBy:{
-        type: mongoose.Schema.ObjectId
+        type: mongoose.Schema.ObjectId,
+        ref: "User"
     },
     createdAt:{
         type: Date
@@ -38,5 +56,7 @@ const PostSchema = new mongoose.Schema({
         type: Date
     }
 })
+
+
 
 export const Post = mongoose.model("Post", PostSchema)

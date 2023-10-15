@@ -13,29 +13,35 @@ export const CreatePost = {
         parentPostId: {type: GraphQLID},
         topic:{type: GraphQLString},
         body: {type: GraphQLString},
-        communityName: {type: GraphQLString},
+        community: {type: GraphQLID},
+        user:{type: GraphQLID},
         createdBy: {type: GraphQLID},
         updatedBy : {type: GraphQLID},
     },
-    async resolve(parent: string, args: {topic: string, body: string, parentPostId: string, author: string, communityName: string, createdBy: string, updatedBy: string}, context: any){
+    async resolve(parent: string, args: {topic: string, body: string, parentPostId: string, user:string, author: string, community: string, createdBy: string, updatedBy: string}, context: any){
         console.log(args)
        try{
-        const community:unknown = await Community.findOne({communityName: args.communityName});
+        const community:unknown = await Community.findOne({communityName: args.community});
         const post = new Post({
             parentPostId: args.parentPostId,
             topic: args.topic,
             body: args.body,
-            communityId: (community as ICommunity)._id,
+            community: args.community,
+            user: args.user,
             createdAt: Date.now(),
             updatedAt: null,
             createdBy: args.createdBy,
             updatedBy: args.updatedBy
         })
-        return post.save()
+         post.save()
+         return{
+            msg: "Post Successfully Created"
+         }
        }
        catch(err){
-        console.log(err)
-        throw new InternalServerError(err as string)
+        return{
+            msg: err
+        }
        }
     }
 }

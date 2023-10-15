@@ -18,10 +18,10 @@ import cookieParser from 'cookie-parser'
 const app = express()
 
 app.use(morgan('tiny'));
-app.use(cors({
-    origin: "http://localhost:5173/",
-    credentials: true
-}))
+// app.use(cors({
+//     origin: "http://localhost:5173",
+//     credentials: true
+// }))
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Methods', 'GET, PATCH, POST, PUT, DELETE');
     res.header(
@@ -43,11 +43,11 @@ const { graphqlUploadExpress} = require('graphql-upload')
 app.use('/', (express.static(path.join(__dirname, 'upload'))))
 const schemaWithMiddleware = applyMiddleware(schema, middleWare)
 app.use("/graphql",
+cors<cors.CorsRequest>({ origin:'http://localhost:5173'}),
 graphqlUploadExpress({ maxFileSize: 2000000, maxFiles: 10 }),
 graphqlHTTP((req, res)=>{
 return{
     schema: schemaWithMiddleware,
-    cors: false,
     graphiql: true,
         context: () => {
         return {req, res}

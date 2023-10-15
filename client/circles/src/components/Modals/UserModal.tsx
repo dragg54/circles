@@ -13,10 +13,9 @@ type userModalState = {
 }
 const UserModal = () => {
     const openUserModal = useSelector(state => (state as userModalState).userModal)
-    console.log(openUserModal)
   return (
-    <div id='user-modal' className={` w-48 h-[460px] bg-white right-32 top-20 fixed ${openUserModal? 'block':'hidden'}`}>
-        <ul className='mt-4 flex flex-col items-center text-gray-500'>
+    <div className={` w-48 h-[460px] bg-white right-32 top-20 fixed ${openUserModal? 'block':'hidden'}`}>
+        <ul className='mt-4 flex flex-col items-center text-gray-500'  id='user-settings' >
             <li className='user-settings'><CgProfile/> Profile</li>
             <li className='user-settings'><RiGroupLine/> Communities</li>
             <li className='user-settings'><CiSettings /> Settings</li>

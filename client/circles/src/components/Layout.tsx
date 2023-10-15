@@ -4,32 +4,37 @@ import User from './Modals/UserModal'
 import UserModal from './Modals/UserModal'
 import { useDispatch } from 'react-redux'
 import { closeUserModal, openUserModal } from '../redux/UserModal'
+import ResponseModal from './Modals/ResponseModal'
 
 interface ModalTarget extends EventTarget {
-  id: string
+  id: string,
+  parentNode:{
+    id: string
+  }
 }
 
 const Layout = ({children}: {children: React.ReactNode}) => {
   const dispatch = useDispatch()
 
-  function toggleModal(){
+  function toggleUserModal(){
     document.addEventListener('click', (e)=>{
-      if((e.target as ModalTarget)!.id !== "user-setting"){
-        console.log(e.target)
-        console.log("yellow")
-        dispatch(closeUserModal())
+      if((e.target as ModalTarget).id == "user-settings" || (e.target as ModalTarget).parentNode.id == "user-settings"){
+        console.log("red")
+        dispatch(openUserModal())
       }
       else{
-        dispatch(openUserModal())
+        console.log("yellow")
+        dispatch(closeUserModal())
       }
     })
   }
   return (
     <div className='w-screen z-30' onClick={()=>{
-      toggleModal()
+      toggleUserModal()
     }}>
         <Header/>
         <body className='relative w-screen h-auto justify-center item-center'>
+          <ResponseModal message='message'/>
           <UserModal />        
           {children}
         </body>

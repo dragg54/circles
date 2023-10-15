@@ -1,3 +1,5 @@
+import { IPost, PostCommunity } from "./IPost"
+
 export type AuthState = {
     auth: {
         id: string,
@@ -5,4 +7,8 @@ export type AuthState = {
         token: string,
         profilePicture: string
     }
+}
+
+export interface PostState extends Omit<IPost, 'community'>{
+    community: PostCommunity
 }
