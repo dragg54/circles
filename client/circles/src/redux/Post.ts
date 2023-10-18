@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PostState } from "../types/States";
-import { IPost, PostCommunity } from "../types/IPost";
+import { IPost } from "../types/IPost";
 
 const postSlice = createSlice({
     name: 'post',
@@ -21,14 +21,9 @@ const postSlice = createSlice({
         updatedAt: null
     }],
     reducers: {
-        fetchPosts: (state, action: { payload: { posts: PostState [], community: string}}) => {
-            const {posts, community} = action.payload
-            if(community && community.length > 0){
-                console.log("post", posts)
-                const allPosts = state?.filter(post =>  post.community.id == community)
-                console.log(community)
-                return posts
-            }
+        fetchPosts: (state, action: { payload: { posts: PostState [] }}) => {
+            const {posts} = action.payload
+            console.log(posts)
             return posts
         },
         addPost: (state, action: { payload:{post: PostState | IPost}}) =>{

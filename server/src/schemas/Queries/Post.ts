@@ -28,6 +28,7 @@ export const GetCommunityPosts = {
         community: {type: new GraphQLList(GraphQLID)}
     },
     async resolve(parent:any, args: any){
+        console.log(args.community)
         try{
             const posts = await Post.find({
                 community:{
@@ -36,7 +37,6 @@ export const GetCommunityPosts = {
             })
             .populate("user", "userName profilePicture")
             .populate("community", "communityName")
-            console.log("posts", posts)
             return posts
         }
         catch(err){

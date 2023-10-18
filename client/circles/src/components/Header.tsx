@@ -1,4 +1,4 @@
-import React, { ChangeEvent, SyntheticEvent, useState } from 'react'
+import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react'
 import ProfilePicture from './ProfilePicture'
 import CreateButton from './Buttons/CreateButton'
 import { PiBellThin, PiMusicNotesSimpleLight } from 'react-icons/pi'
@@ -9,34 +9,51 @@ import { fetchPosts } from '../redux/Post'
 import { PostState } from '../types/States'
 import { PostCommunity } from '../types/IPost'
 import { useDispatch } from 'react-redux'
-import { useQuery } from '@apollo/client'
+import { useLazyQuery, useQuery } from '@apollo/client'
 import { GET_USER_COMMUNITIES } from '../graphql/queries/community'
+import { GET_ALL_POSTS } from '../graphql/queries/post'
 
 const Header = () => {
     interface SelectTarget extends EventTarget {
         value: string
     }
-    const [communityId, setCommunityId] = useState("")
+    const [communityValue, setComunityValue ] = useState("")
+
+    const dispatch = useDispatch()
 
     const { data: community, error, loading } = useQuery(GET_USER_COMMUNITIES)
-    const dispatch = useDispatch()
-    function handleSelectCommunity(e: SyntheticEvent<HTMLSelectElement, Event>) {
-        e.preventDefault()
-        setCommunityId((e.target as SelectTarget).value)
-        dispatch(fetchPosts({ posts: (community?.allCommunityPosts as PostState[]), community: (e.target as SelectTarget).value }))
+    
+    async function handleCommunityChange(e:ChangeEvent<HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement>){
+        setComunityValue(e.target.value)
+        try{
+            if(!postLoading && !postError){
+                const response = await getPosts({variables: {
+                    community: [e.target.value]
+                }})
+                console.log(response)
+                dispatch(fetchPosts({posts: response.data.allCommunityPosts}))
+            }
+        }  
+        catch(err){
+            console.log(err)
+        }      
     }
+
+
+    
+    const [getPosts, {error: postError, loading: postLoading}] = useLazyQuery(GET_ALL_POSTS)
+
     if(loading){
         return <p>Loading...</p>
     }
-    console
     return (
         <div className='w-full h-20 bg-white border-b border-gray-400 shadow-md flex justify-between items-center px-10 fixed top-0 z-10'>
             <div className='flex justify-center items-center gap-16 relative w-1/3'>
                 <h4>Circles</h4>
                 <FiHome className="w-7 h-7 text-gray-700" />
-                <CommunityModal handleSelectCommunity={handleSelectCommunity} communitySelectedHeading={'Community'} name={''} handleformChange={function (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement>): void {
-                    handleSelectCommunity(e)
-                }} value={''} />
+                <CommunityModal value={communityValue}  communitySelectedHeading={'Community'} name={''} handleformChange={function (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement>): void {
+                    handleCommunityChange(e)
+                }} />
             </div>
             <div className='relative w-1/3 flex justify-center'>
                 <input type='text' className='p-3 border-gray-400 border rounded-md outline-none' placeholder='search circles' />
@@ -50,20 +67,5 @@ const Header = () => {
         </div>
     )
 }
-
-// const CommunityList = () => {
-//     const communities = ["Politics", "Music", "Sport", "Entertainment", "Tech", "Business", "Education", "Movie"]
-//     return (
-//         <div>
-//             {communities.map((community: string) => {
-//                 return (
-//                     <div className='width-full p-3 bg-white'>
-//                         <p>{community}</p>
-//                     </div>
-//                 )
-//             })}
-//         </div>
-//     )
-// }
 
 export default Header

@@ -9,7 +9,6 @@ export const GET_ALL_POSTS = gql`
             image
             community{
                 communityName
-                
             }
             createdAt
             createdBy

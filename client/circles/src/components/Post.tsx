@@ -32,7 +32,7 @@ const Post = ({width}: {width:number | string}) => {
     const dispatch = useDispatch()
     const posts = useSelector(state => (state as PostType).post)
     useEffect(()=>{
-        dispatch(fetchPosts({posts: (data?.allCommunityPosts as PostState[]), community:null}))
+        dispatch(fetchPosts({posts: (data?.allCommunityPosts as PostState[])}))
     }, [data, loading, error, user])
     if (loading){
         return <p>Loading</p>

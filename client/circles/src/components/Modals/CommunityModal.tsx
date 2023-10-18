@@ -1,32 +1,14 @@
 import { useQuery } from '@apollo/client'
-import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent } from 'react'
 import { GET_USER_COMMUNITIES } from '../../graphql/queries/community'
 import { CommunityType } from '../../types/Community'
-import { useDispatch } from 'react-redux'
-import { fetchPosts } from '../../redux/Post'
-import { PostState } from '../../types/States'
-import { PostCommunity } from '../../types/IPost'
 
-interface SelectTarget extends EventTarget
-{
-    value: string
-}
-
-export const CommunityModal = ({communitySelectedHeading, handleSelectCommunity, name, handleformChange, value}: {communitySelectedHeading: string, handleSelectCommunity:(e: SyntheticEvent<HTMLSelectElement, Event>)=> void, name: string, handleformChange:(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>)=> void, value: string}) => {
-    const [communityId, setCommunityId] = useState("")
-    const {data:community, error , loading} = useQuery(GET_USER_COMMUNITIES,
-        {
-            variables: [communityId]
-        })
-    const dispatch = useDispatch()
-    
-    useEffect(()=>{
-        dispatch(fetchPosts({posts: (community?.allCommunityPosts as PostState[]), community:communityId}))
-    }, [communityId])
+export const CommunityModal = ({communitySelectedHeading, name, handleformChange, value}: {communitySelectedHeading: string, name: string, handleformChange:(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>)=> void, value: string}) => {
+    const {data:community, error , loading} = useQuery(GET_USER_COMMUNITIES)
     if(!loading && !error){
         return (
             <div className="relative inline-block w-64">
-            <select onSelect={(e: SyntheticEvent<HTMLSelectElement, Event>) =>handleSelectCommunity(e)} className="text-gray-400 block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" value={value} onChange={(e)=>handleformChange(e)} name={name}>
+            <select className="text-gray-400 block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" value={value} onChange={(e)=>handleformChange(e)} name={name}>
                 <option value="">{communitySelectedHeading}</option>
                 {community.userCommunities.map((comm: CommunityType)=>{
                     return(
