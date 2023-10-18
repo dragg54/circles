@@ -4,6 +4,7 @@ export interface IPost{
     parentPostId: string,
     topic: string
     body: string,
+    image: File | null | string,
     community: string | PostCommunity | null
     error: string,
     userName: string,

@@ -1,20 +1,38 @@
-import React, { ChangeEvent } from 'react'
-import { HiOutlineComputerDesktop } from 'react-icons/hi2'
-import { MdHowToVote, MdOutlineSchool, MdSportsSoccer } from 'react-icons/md'
-import { PiMusicNotesSimpleLight } from 'react-icons/pi'
-import { RiExchangeDollarLine } from 'react-icons/ri'
+import { useQuery } from '@apollo/client'
+import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react'
+import { GET_USER_COMMUNITIES } from '../../graphql/queries/community'
+import { CommunityType } from '../../types/Community'
+import { useDispatch } from 'react-redux'
+import { fetchPosts } from '../../redux/Post'
+import { PostState } from '../../types/States'
+import { PostCommunity } from '../../types/IPost'
 
-export const CommunityModal = ({communitySelectedHeading, name, handleformChange, value}: {communitySelectedHeading: string, name: string, handleformChange:(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=> void, value: string}) => {
-    return (
-        <div className="relative inline-block w-64">
-            <select className="text-gray-400 block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" value={value} onChange={(e)=>handleformChange(e)} name={name}>
-                <option value="" className=''>{communitySelectedHeading}</option>
-                <option value="Music"> Music<PiMusicNotesSimpleLight className="bg-red-400" /></option>
-                <option value="Tech"><HiOutlineComputerDesktop /> Tech</option>
-                <option value="Politics"><MdHowToVote /> Politics</option>
-                <option value="Education"><MdOutlineSchool /> Education</option>
-                <option value="Business"><RiExchangeDollarLine /> Business</option>
-                <option value="Sport"><MdSportsSoccer /> Sport</option>
+interface SelectTarget extends EventTarget
+{
+    value: string
+}
+
+export const CommunityModal = ({communitySelectedHeading, handleSelectCommunity, name, handleformChange, value}: {communitySelectedHeading: string, handleSelectCommunity:(e: SyntheticEvent<HTMLSelectElement, Event>)=> void, name: string, handleformChange:(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>)=> void, value: string}) => {
+    const [communityId, setCommunityId] = useState("")
+    const {data:community, error , loading} = useQuery(GET_USER_COMMUNITIES,
+        {
+            variables: [communityId]
+        })
+    const dispatch = useDispatch()
+    
+    useEffect(()=>{
+        dispatch(fetchPosts({posts: (community?.allCommunityPosts as PostState[]), community:communityId}))
+    }, [communityId])
+    if(!loading && !error){
+        return (
+            <div className="relative inline-block w-64">
+            <select onSelect={(e: SyntheticEvent<HTMLSelectElement, Event>) =>handleSelectCommunity(e)} className="text-gray-400 block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" value={value} onChange={(e)=>handleformChange(e)} name={name}>
+                <option value="">{communitySelectedHeading}</option>
+                {community.userCommunities.map((comm: CommunityType)=>{
+                    return(
+                        <option key={comm._id} value = {comm._id}>{comm.communityName}</option>
+                    )
+                })}
                 {communitySelectedHeading == "Community"? <option> Create Community</option>: ""}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -22,5 +40,12 @@ export const CommunityModal = ({communitySelectedHeading, name, handleformChange
             </div>
         </div>
     )
+    }
+    else if(loading){
+        return <p>Loading...</p>
+    }
+    else{
+        return <p>Something happened</p>
+    }
 }
 export default CommunityModal

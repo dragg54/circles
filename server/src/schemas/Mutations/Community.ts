@@ -1,10 +1,11 @@
-import { GraphQLID, GraphQLString } from "graphql"
+import { GraphQLID, GraphQLList, GraphQLString } from "graphql"
 import { Community } from "../../models/Community"
 import { CommunityType } from "../Typedefs/Community"
 import { NotFoundError } from "../../types/Error"
 import { IUser } from "../../types/User"
 import { Context } from "../../types/Context"
 import { GetCommunitiesById } from "../Queries/Community"
+import { ICommunity } from "../../types/ICommunity"
 
 export const CreateCommunity = {
     type: CommunityType,
@@ -93,6 +94,29 @@ export const AddCommunityMembers = {
             console.log(err)
             return err
         }
+    }
+}
+
+export const JoinCommunities = {
+    type: new GraphQLList(CommunityType),
+    args: {
+        communityId: {type: new GraphQLList(GraphQLID)},
+        userId: {type: GraphQLID}
+    },
+    async resolve(parent: any, args: any){
+       try{
+        args.communityId.forEach((community: ICommunity)=>{
+            if(community.communityMembers.includes(args.userId)){
+                throw new Error(`User is already a member of community with id ${community._id}`)
+            }
+            const newCommunityMembers = [...community.communityMembers, args.userId]
+            Community.findOneAndUpdate({_id:args.communityId }, { communityMembers: newCommunityMembers})
+        })
+       }
+       catch(err){
+        console.log(err)
+        return(err)
+       }
     }
 }
 

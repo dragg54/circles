@@ -8,6 +8,7 @@ import PostForm from './components/Forms/PostForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { isClosed } from './redux/GlobalModal'
 import Post from './pages/Post'
+import User from './pages/User'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
             <Route path="/post" element={<Post />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/signin" element={<Signin />} />
+            <Route path="/user" element={<User />} />
           </Routes>
         </Router>
     </body>

@@ -6,7 +6,6 @@ import { decode } from "punycode"
 require
 
 export function verify(req: UserLoginRequest, next:any){
-    console.log(req.headers)
 const token: string = req.headers.auth as string
    if(!token){
         throw new Error("User not logged in")

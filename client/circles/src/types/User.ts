@@ -1,13 +1,12 @@
 export interface UserAuth{
     id: string,
     token: string,
-    userName: string,
-    profilePicture: string,
-    email: string,
-    bio: string
+    user: IUser
 }
 
-export interface IUser extends UserAuth{
+export interface IUser{
+    userName: "",
+    profilePicture: "",
     communities: [],
     following: [],
     followers: [],

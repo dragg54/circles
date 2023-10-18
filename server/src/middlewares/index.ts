@@ -7,6 +7,10 @@ export const middleWare = {
         deletePost: IsAuthenticated,
         createCommunity: IsAuthenticated,
         deleteCommunity: IsAuthorizedAuthor,
-        deleteCommunityMember: IsAuthorizedAuthor
+        deleteCommunityMember: IsAuthorizedAuthor,
+    },
+    RootQuery:{
+        userCommunities: IsAuthenticated,
     }
 }
+

@@ -1,7 +1,7 @@
 import { GraphQLScalarType, GraphQLString } from "graphql";
 import { UserLoginResponse, UserType } from "../Typedefs/User";
 import bcrypt from 'bcrypt'
-import { IUser } from "../../types/User";
+import { IUser, UserLoginRequest } from "../../types/User";
 import { User } from "../../models/User";
 import { DuplicateError, InternalServerError, NotFoundError } from "../../types/Error";
 import { Request, Response } from "express";
@@ -12,6 +12,7 @@ import { ImageType } from "../Typedefs/Image";
 import { createReadStream } from "fs";
 import { Context } from "../../types/Context";
 import { getUser } from "../../utils/GetCurrentUser";
+import { Community } from "../../models/Community";
 
 const { GraphQLUpload, FileUpload } = require('graphql-upload')
 export const CreateUser = {
@@ -76,12 +77,17 @@ export const LoginUser = {
             if (!isMatch) {
                 throw new Error("Password is incorrect")
             }
-            const token = jwt.sign({ id: existingUser._id, email: existingUser.email, userName: existingUser.userName, bio: existingUser.bio, profilePictue: existingUser.profilePicture }, process.env.SECRET_KEY!)
+            const userCommunities  = await Community.find({
+                communityMembers: {
+                    $in: [existingUser._id]
+        }}).select("_id")
+            const token = jwt.sign({ id: existingUser._id, email: existingUser.email, userName: existingUser.userName, bio: existingUser.bio, profilePictue: existingUser.profilePicture, communities: userCommunities }, process.env.SECRET_KEY!)
             context().res.cookie('auth', token, { maxAge: 3600000, httpOnly: true, sameSite:"lax"})
             return {status: "OK", token}
         }
         catch (err) {
             console.log(err)
+            return err
         }
     }
 }

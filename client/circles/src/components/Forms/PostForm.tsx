@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import { IPost } from '../../types/IPost'
 import { useMutation } from '@apollo/client'
 import { CreatePostMutation } from '../../graphql/mutations/post'
@@ -9,9 +9,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addPost } from '../../redux/Post'
 import { AuthState } from '../../types/States'
 import { isClosed } from '../../redux/GlobalModal'
-import { AiOutlineCheck } from 'react-icons/ai'
-import { closeResponseModal, openResponseModal } from '../../redux/ResponseModal'
 import useTimedModal from '../../hooks/useTimedModal'
+import GalleryInput from '../GalleryInput'
 
 
 const PostForm = () => {
@@ -21,6 +20,7 @@ const PostForm = () => {
         parentPostId: "",
         topic: "",
         body: "",
+        image: null,
         community: "" as string,
         error: '',
         userName: currentUser.userName,
@@ -35,6 +35,10 @@ const PostForm = () => {
 
     }
 
+    interface FileTarget extends EventTarget{
+        files: FileList
+    }
+
     const dispatch = useDispatch()
     const dispatchModal = useDispatch()
     function handleformChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
@@ -44,36 +48,48 @@ const PostForm = () => {
             ...formObj, [name]: value
         })
     }
-    const [createPostMutation, { error, data }] = useMutation(CreatePostMutation)
+
+    function handleImageChange(e: ChangeEvent<HTMLInputElement>){
+        e.preventDefault()
+        const postImage = (e.target as FileTarget).files[0]
+        setFormObj({...formObj, image: postImage})
+    }
+    const [createPostMutation, { error, loading }] = useMutation(CreatePostMutation)
     const toggleResponseModal = useTimedModal()
 
     const handleMutation = async () => {
-        console.log(formObj)
         try {
-            const { body, topic, community } = formObj
+            const { body, topic, community, image } = formObj
             const result = await createPostMutation({
                 variables: {
                     topic: topic,
                     body: body,
+                    image: image,
                     community: community
                 },
             });
-            const response = result.data
-            dispatch(addPost({post: formObj}))
+            const newPost = result.data.createPost
+            formObj.image = newPost.image
+            dispatch(addPost({post: newPost}))
             dispatchModal(isClosed({formName:''}))
             toggleResponseModal(`Post successfully sent`)
 
         } catch (e:unknown) {
-            toggleResponseModal(e.msg)
+            toggleResponseModal((e as Error).message)
             console.error('Mutation error:', e);
         }
     }
+    if (loading) return 'Loading...';
+   if (error) return `Error: ${error.message}`;
     return (
         <Form>
             <h1 className='text-2xl w-full border-b border-gray-300 mb-2 pb-4 font-extrabold'>What's on your mind ?</h1>
-            <CommunityModal communitySelectedHeading={'Select Community'} name="communityName" value={formObj.community!} handleformChange={handleformChange} />
+            <CommunityModal communitySelectedHeading={'Select Community'} name="community" value={(formObj.community! as string)} handleformChange={handleformChange} />
             <input type="text" placeholder='Title' name="topic" value={formObj.topic} onChange={handleformChange} />
             <textarea cols={20} rows={10} placeholder='Body' name='body' value={formObj.body} onChange={handleformChange} />
+            <div>
+                <GalleryInput {...{handleImageChange}}/>
+            </div>
             <SubmitButton name={"Save"} handleSubmit={handleMutation} />
         </Form>
     )

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PostState } from "../types/States";
-import { IPost } from "../types/IPost";
+import { IPost, PostCommunity } from "../types/IPost";
 
 const postSlice = createSlice({
     name: 'post',
@@ -9,6 +9,7 @@ const postSlice = createSlice({
         parentPostId: '',
         topic: '',
         body: '',
+        image:null,
         community: null,
         userName: '',
         error: '',
@@ -20,13 +21,15 @@ const postSlice = createSlice({
         updatedAt: null
     }],
     reducers: {
-        fetchPosts: (state, action: { payload: { posts: PostState []} }) => {
-            console.log(action.payload.posts)
-            // if(action.payload && action.payload.filter){
-            //     const community = (state as [PostState]).filter((posts)=> (posts.community as PostCommunity).name != action.payload.filter.toString())
-            //     return [...state, ...community]
-            // }
-            return action.payload.posts
+        fetchPosts: (state, action: { payload: { posts: PostState [], community: string}}) => {
+            const {posts, community} = action.payload
+            if(community && community.length > 0){
+                console.log("post", posts)
+                const allPosts = state?.filter(post =>  post.community.id == community)
+                console.log(community)
+                return posts
+            }
+            return posts
         },
         addPost: (state, action: { payload:{post: PostState | IPost}}) =>{
             console.log(state)
@@ -34,12 +37,10 @@ const postSlice = createSlice({
            const lastPostId = state[state.length - 1]._id
            if(lastPostId){
             newPost._id = lastPostId + 1
-            console.log("newPost", newPost._id)
            }
            else{
             newPost._id = 1
            }
-           console.log([...state, newPost])
            return [...state, newPost]
         },
     },

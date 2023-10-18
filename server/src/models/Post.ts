@@ -30,6 +30,9 @@ const PostSchema = new mongoose.Schema({
         required: true,
         ref: "community"
     },
+    image:{
+        type: String
+    },
     user:{
         type: mongoose.Schema.ObjectId,
         required: true,

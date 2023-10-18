@@ -6,3 +6,9 @@ export enum Community{
     Education,
     Business,
 }
+
+export type CommunityType = {
+    _id: string,
+    communityName: string,
+    communityMembers: string[]
+}

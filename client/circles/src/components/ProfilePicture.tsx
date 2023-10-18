@@ -1,9 +1,9 @@
 import React from 'react'
 
-const ProfilePicture = () => {
+const ProfilePicture = ({width, height}:{width: number, height: number}) => {
   return (
-    <div className='w-12 h-12 rounded-full object-cover overflow-hidden flex justify-center items-center cursor-pointer' >
-        <img src="images/pp.jpg" className='w-10 h-10 rounded-full' id='user-settings' alt="" />
+    <div className={`w-${width} h-${height} rounded-full object-contain bg-red-500 overflow-hidden flex justify-center items-center cursor-pointer`} >
+        <img src="images/pp.jpg" className='w-full h-full' id='user-settings' alt="" />
     </div>
   )
 }

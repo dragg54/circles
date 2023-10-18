@@ -9,35 +9,42 @@ import { IPost } from '../types/IPost'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchPosts } from '../redux/Post'
 import { PostState } from '../types/States'
+import { UserAuth } from '../types/User'
+import {  CommunityType } from '../types/Community'
 
 type PostType = {
         post: IPost[]
 }
-
-const Post = () => {
+type UserState = {
+        auth: UserAuth
+}
+const Post = ({width}: {width:number | string}) => {
+    const user = useSelector(state => (state as UserState).auth).user
     const navigate = useNavigate()
     function goToPost() {
         navigate("/post")
     }
-    const { data, error, loading } = useQuery(GET_ALL_POSTS)
+    const { data, error, loading } = useQuery(GET_ALL_POSTS, {
+        variables: {
+            community: user.communities?.map((comm)=> (comm as CommunityType)._id) 
+        }
+    })
     const dispatch = useDispatch()
     const posts = useSelector(state => (state as PostType).post)
     useEffect(()=>{
-        dispatch(fetchPosts({posts: (data?.getPosts as PostState[])}))
-    }, [data, loading, error])
+        dispatch(fetchPosts({posts: (data?.allCommunityPosts as PostState[]), community:null}))
+    }, [data, loading, error, user])
     if (loading){
         return <p>Loading</p>
     }
-
-    console.log(posts)
     return (
         <>
         {!loading && posts &&  posts.map((post: IPost) => {
             return (
-                <div key={post._id} onClick={goToPost} className='cursor-pointer w-1/2 bg-white rounded-md shadow-md p-4 h-auto mb-5 border-l-4 border-r border-t border-[#333A44] border-b-4 shadow-gray-400 '>
+                <div key={post._id} onClick={goToPost} className={`cursor-pointer w-${width} bg-white rounded-md shadow-md p-4 h-auto mb-5 border-l-4 border-r border-t border-[#333A44] border-b-4 shadow-gray-400 `}>
                     <PostHeader />
                     <PostTopic topic={post.topic} />
-                    <PostContent content={post.body} />
+                    <PostContent content={post.body} image={(post.image as string)} />
                     <PostReactions />
                 </div>
             )
@@ -51,7 +58,7 @@ const PostHeader = () => {
     return (
         <div className='w-full flex justify-between items-center border-b border-gray-200 shadow-sm mb-4 pb-4'>
             <div className='items-center flex justify-between'>
-                <ProfilePicture />
+                <ProfilePicture height={12} width={12}/>
                 <p className='ml-4'>Albert</p>
             </div>
             <div className='text-gray-400'>
@@ -67,10 +74,15 @@ const PostTopic = ({ topic }: { topic: string }) => {
     )
 }
 
-const PostContent = ({ content }: { content: string }) => {
-    return (
-        <p className='text-gray-500 w-full border-b border-gray-200 shadow-sm pb-4'>{content}
+const PostContent = ({ content, image }: { content: string, image: string }) => {
+ return (
+       <div className='w-full mt-6'>
+            {image?<div className='max-h-[400px] w-full object-cover overflow-hidden mb-5'>
+            <img src={'http://'+image} alt="" className='h-full w-full'/>
+            </div>: ""}
+         <p className='text-gray-500 w-full border-b border-gray-200 shadow-sm pb-4'>{content}
         </p>
+       </div>
     )
 }
 
@@ -94,7 +106,7 @@ export const ParentPost = ({ topic, content }: { topic: string, content: string 
         <div className='cursor-pointer w-full bg-white rounded-md shadow-md p-4 h-auto mb-5 border-l-4 border-r border-t border-[#333A44] border-b-4 shadow-gray-400 '>
             <PostHeader />
             <PostTopic topic={topic} />
-            <PostContent content={content} />
+            <PostContent content={content} image='' />
             <PostReactions />
         </div>
     )
@@ -105,7 +117,7 @@ export const ChildPost = ({ topic, content }: { topic: string, content: string }
     return (
         <div className='cursor-pointer w-11/12 self-end bg-white rounded-md shadow-md p-4 h-auto mb-5 border-l-4 border-r border-t border-[#333A44] border-b-4 shadow-gray-400 '>
             <PostHeader />
-            <PostContent content={content} />
+            <PostContent content={content} image=''/>
             <PostReactions />
         </div>
     )

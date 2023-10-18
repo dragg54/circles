@@ -7,6 +7,7 @@ import SubmitButton from '../Buttons/SubmitButton'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAuth } from '../../redux/Auth'
 import { IUser } from '../../types/User'
+import { getUser } from '../../redux/User'
 
 type UserState = {
   user: IUser
@@ -20,7 +21,6 @@ export const SigninForm = () =>{
     }
     const [ loginUserMutation ] =  useMutation(LoginUser)
     const [loginDetails, setLoginDetails ] = useState({email: "", password: ""})
-    const currentUser = useSelector(state => (state as UserState).user)
     const dispatch = useDispatch()
   
     function handleformChange(e: ChangeEvent<HTMLInputElement>){
@@ -39,7 +39,6 @@ export const SigninForm = () =>{
       const response = result.data.loginUser
      if(response && response.status == "OK"){
       dispatch(fetchAuth({token: response.token}))
-
       localStorage.setItem("auth", JSON.stringify(response.token))
       navigate("/")
      }
@@ -51,7 +50,7 @@ export const SigninForm = () =>{
     return(
      <Form>
        <div className='w-full  flex flex-col gap-3'>
-    <h1 className='self-start text-4xl font-extrabold w-full border-b  border-gray-300 py-3'>Sign in</h1>
+    <h1 className='self-start text-4xl font-extrabold w-full border-b border-gray-300 py-3'>Sign in</h1>
       <input type="text" name="email" id="" placeholder='Email' onChange={handleformChange} value={loginDetails.email}/>
       <input type="password" name="password" id="" placeholder='Password' value={loginDetails.password} onChange={handleformChange}/>
       <SubmitButton name="LOGIN" handleSubmit={handleMutation}/> 

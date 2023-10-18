@@ -1,17 +1,19 @@
 import { GraphQLSchema, GraphQLObjectType } from 'graphql'
 import { CreateUser, LoginUser } from './Mutations/User'
-import { GetPosts, GetPostsById, GetPostsByUserId } from './Queries/Post'
+import { GetCommunityPosts, GetPosts, GetPostsById, GetPostsByUserId } from './Queries/Post'
 import { CreatePost, DeletePost, UpdatePost } from './Mutations/Post'
-import { AddCommunityMembers, CreateCommunity, DeleteCommunity, RemoveCommunityMember, UpdateCommunity } from './Mutations/Community'
-import { GetCommunities } from './Queries/Community'
+import { AddCommunityMembers, CreateCommunity, DeleteCommunity, JoinCommunities, RemoveCommunityMember, UpdateCommunity } from './Mutations/Community'
+import { GetCommunities, GetCommunitiesById, GetCommunitiesByUserId } from './Queries/Community'
 
 const RootQuery = new GraphQLObjectType({
-    name: "Rootquery",
+    name: "RootQuery",
     fields: {
-        getPost: GetPostsById,
-        getPosts: GetPosts,
-        getPostsByUserId: GetPostsByUserId,
-        getCommunities: GetCommunities
+        post: GetPostsById,
+        posts: GetPosts,
+        postsByUser: GetPostsByUserId,
+        communities: GetCommunities,
+        userCommunities: GetCommunitiesByUserId,
+        allCommunityPosts: GetCommunityPosts
     }
 })
 
@@ -27,7 +29,8 @@ const Mutation = new GraphQLObjectType({
         updateCommunity: UpdateCommunity,
         deleteCommunity: DeleteCommunity,
         addCommunityMember: AddCommunityMembers,
-        deleteCommunityMember: RemoveCommunityMember
+        deleteCommunityMember: RemoveCommunityMember,
+        joinCommunities: JoinCommunities
     }
 })
 

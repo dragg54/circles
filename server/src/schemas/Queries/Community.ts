@@ -1,6 +1,8 @@
 import { GraphQLList, GraphQLString } from "graphql"
 import { CommunityType } from "../Typedefs/Community"
 import { Community } from "../../models/Community"
+import { Context } from "../../types/Context"
+import { UserLoginRequest } from "../../types/User"
 
 export const GetCommunities = {
     type: new GraphQLList(CommunityType),
@@ -17,12 +19,14 @@ export const GetCommunities = {
 
 export const GetCommunitiesByUserId = {
     type: new GraphQLList(CommunityType),
-    args: {
-        userId: { type: GraphQLString }
-    },
-    async resolve(parent: any, args: any){
+    async resolve(parent: any, args: any, context: Context){
         try {
-            const communities = await Community.find({ createdBy: args.userId })
+            console.log("user", (context().req as UserLoginRequest).user)
+            const communities = await Community.find({
+                communityMembers:{
+                    $in:[(context().req as UserLoginRequest).user.id]
+                }
+            })
             return communities
         }
         catch (err) {

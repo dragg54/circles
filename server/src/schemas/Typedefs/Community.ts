@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLList, GraphQLObjectType, GraphQLString } from "graphql";
+import { GraphQLID, GraphQLInputObjectType, GraphQLList, GraphQLObjectType, GraphQLString } from "graphql";
 
 export const CommunityMember = new GraphQLObjectType({
     name: "CommunityMember",
@@ -22,5 +22,12 @@ export const CommunityType = new GraphQLObjectType({
         communityMembers:{
             type: new GraphQLList(CommunityMember)
         }
+    }
+})
+
+export const CommunityInputType = new GraphQLInputObjectType({
+    name: "CommunityInput",
+    fields:{
+        _id: {type: GraphQLID}
     }
 })
