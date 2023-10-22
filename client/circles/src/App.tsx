@@ -32,6 +32,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/:community" element={<Home />} />
             <Route path="/post" element={<Post />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/signin" element={<Signin />} />

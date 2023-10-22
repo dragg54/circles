@@ -1,6 +1,7 @@
 import React from 'react'
-import { ChildPost, ParentPost } from '../components/Post'
 import Layout from '../components/Layout'
+import { ParentPost } from '../components/Post/ParentPost'
+import { ChildPost } from '../components/Post/ChildPost'
 
 const Post = () => {
   return (

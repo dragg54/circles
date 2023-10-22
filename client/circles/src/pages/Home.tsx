@@ -1,6 +1,6 @@
 import React from 'react'
-import Post from '../components/Post'
 import Layout from '../components/Layout'
+import { Post } from '../components/Post/Post'
 
 const Home = () => {
   return (

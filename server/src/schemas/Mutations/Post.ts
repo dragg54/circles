@@ -8,6 +8,8 @@ import { Community } from "../../models/Community";
 import { ICommunity } from "../../types/ICommunity";
 import { readFile } from "../../middlewares/file";
 import { ErrorType } from "../Typedefs/Error";
+import { Context } from "../../types/Context";
+import { RequestResponse } from "../Typedefs/Response";
 const { GraphQLUpload, FileUpload } = require('graphql-upload')
 
 export const CreatePost = {
@@ -91,17 +93,41 @@ export const DeletePost = {
     }
 }
 
-export const AddLikes = {
+export const LikePost = {
+    type: RequestResponse,
     args: {
         postId: { type: GraphQLID }
     },
     async resolve(parent: any, args: { postId: string }, context: any) {
         try {
-            const existingPost = await Post.findOne({ _id: args.postId })
-            if (existingPost) {
-                const exisitingLikes = existingPost.likedBy.filter(usr => usr._id != context.user.id)
-                Post.findOneAndReplace()
-            }
+            const existingPost = await Post.findByIdAndUpdate(args.postId, {
+                $push: {
+                    likedBy: (context().req as UserLoginRequest).user.id
+                }
+            },
+                { new: true })
+
+        }
+        catch (err) {
+            throw new InternalServerError(err as string)
+        }
+    }
+}
+
+export const UnlikePost = {
+    type: RequestResponse,
+    args: {
+        postId: { type: GraphQLID }
+    },
+    async resolve(parent: any, args: { postId: string }, context: Context) {
+        try {
+            const existingPost = await Post.findByIdAndUpdate(args.postId, {
+                $pull: {
+                    likedBy: (context().req as UserLoginRequest).user.id
+                }
+            },
+                { new: true })
+
         }
         catch (err) {
             throw new InternalServerError(err as string)

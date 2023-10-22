@@ -39,12 +39,14 @@ const PostSchema = new mongoose.Schema({
         ref: "User"
     },
     
-    likedBy:{
-       type: [UserSchema]
-    },
-    dislikedBy:{
-        type: [UserSchema]
-    },
+    likedBy:[{
+        type: mongoose.Schema.ObjectId,
+        ref: "User"
+    }],
+    dislikedBy:[{
+        type: mongoose.Schema.ObjectId,
+        ref: "User"
+    }],
     createdBy:{
         type: mongoose.Schema.ObjectId,
         ref: "User"

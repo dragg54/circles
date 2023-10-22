@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux'
 import { useLazyQuery, useQuery } from '@apollo/client'
 import { GET_USER_COMMUNITIES } from '../graphql/queries/community'
 import { GET_ALL_POSTS } from '../graphql/queries/post'
+import { useNavigate } from 'react-router-dom'
 
 const Header = () => {
     interface SelectTarget extends EventTarget {
@@ -20,7 +21,7 @@ const Header = () => {
     const [communityValue, setComunityValue ] = useState("")
 
     const dispatch = useDispatch()
-
+    const navigate = useNavigate()
     const { data: community, error, loading } = useQuery(GET_USER_COMMUNITIES)
     
     async function handleCommunityChange(e:ChangeEvent<HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement>){
@@ -30,7 +31,7 @@ const Header = () => {
                 const response = await getPosts({variables: {
                     community: [e.target.value]
                 }})
-                console.log(response)
+                
                 dispatch(fetchPosts({posts: response.data.allCommunityPosts}))
             }
         }  

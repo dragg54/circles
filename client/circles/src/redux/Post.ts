@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PostState } from "../types/States";
 import { IPost } from "../types/IPost";
+import { IUser } from "../types/User";
 
 const postSlice = createSlice({
     name: 'post',
@@ -27,7 +28,6 @@ const postSlice = createSlice({
             return posts
         },
         addPost: (state, action: { payload:{post: PostState | IPost}}) =>{
-            console.log(state)
            const newPost = action.payload.post
            const lastPostId = state[state.length - 1]._id
            if(lastPostId){
@@ -37,6 +37,20 @@ const postSlice = createSlice({
             newPost._id = 1
            }
            return [...state, newPost]
+        },
+        likePost:(state, action: {payload:{ user: IUser, postId: string}})=>{
+            const post = state.find(post => post._id == action.payload.postId)
+            if(post && !post.likedBy.includes(action.payload.user)){
+                post.likedBy.push(action.payload.user)
+            }
+            return state
+        },
+        unLikePost:(state, action: {payload:{ user: IUser, postId: string}})=>{
+            const post = state.find(post => post._id == action.payload.postId)
+            if(post && post.likedBy.includes(action.payload.user) && post){
+                post.likedBy.pop()
+            }
+            return state
         },
     },
 });

@@ -24,3 +24,22 @@ export const CreatePostMutation = gql`
         }
     }
 `
+export const LikePost = gql`
+    mutation LikePost(
+        $postId: ID
+    ){
+        likePost(postId: $ID){
+            msg
+        }
+    }
+`
+
+export const UnLikePost = gql`
+    mutation UnlikePost(
+        $postId: ID
+    ){
+        unlikePost(postId: $ID){
+            msg
+        }
+    }
+`

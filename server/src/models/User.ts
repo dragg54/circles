@@ -16,6 +16,12 @@ export const UserSchema = new mongoose.Schema({
     profilePic:{
         type: String
     },
+    followers:[
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: "User"
+        }
+    ],
     bio:{
         type: String,
         require: true

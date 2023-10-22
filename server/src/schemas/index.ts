@@ -1,7 +1,7 @@
 import { GraphQLSchema, GraphQLObjectType } from 'graphql'
-import { CreateUser, LoginUser } from './Mutations/User'
+import { CreateUser, Follow, LoginUser, Unfollow } from './Mutations/User'
 import { GetCommunityPosts, GetPosts, GetPostsById, GetPostsByUserId } from './Queries/Post'
-import { CreatePost, DeletePost, UpdatePost } from './Mutations/Post'
+import { CreatePost, DeletePost, LikePost, UnlikePost, UpdatePost } from './Mutations/Post'
 import { AddCommunityMembers, CreateCommunity, DeleteCommunity, JoinCommunities, RemoveCommunityMember, UpdateCommunity } from './Mutations/Community'
 import { GetCommunities, GetCommunitiesById, GetCommunitiesByUserId } from './Queries/Community'
 
@@ -30,7 +30,11 @@ const Mutation = new GraphQLObjectType({
         deleteCommunity: DeleteCommunity,
         addCommunityMember: AddCommunityMembers,
         deleteCommunityMember: RemoveCommunityMember,
-        joinCommunities: JoinCommunities
+        joinCommunities: JoinCommunities,
+        follow: Follow,
+        unfollow: Unfollow,
+        likePost: LikePost,
+        unlikePost: UnlikePost
     }
 })
 

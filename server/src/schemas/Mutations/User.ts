@@ -1,4 +1,4 @@
-import { GraphQLScalarType, GraphQLString } from "graphql";
+import { GraphQLID, GraphQLScalarType, GraphQLString } from "graphql";
 import { UserLoginResponse, UserType } from "../Typedefs/User";
 import bcrypt from 'bcrypt'
 import { IUser, UserLoginRequest } from "../../types/User";
@@ -13,6 +13,7 @@ import { createReadStream } from "fs";
 import { Context } from "../../types/Context";
 import { getUser } from "../../utils/GetCurrentUser";
 import { Community } from "../../models/Community";
+import { RequestResponse } from "../Typedefs/Response";
 
 const { GraphQLUpload, FileUpload } = require('graphql-upload')
 export const CreateUser = {
@@ -88,6 +89,51 @@ export const LoginUser = {
         catch (err) {
             console.log(err)
             return err
+        }
+    }
+}
+
+export const Follow = {
+    type: RequestResponse,
+    args:{
+        userId: {type: GraphQLID}
+    },
+    async resolve(parent:any, args:{userId : string}, context: Context){
+        try{
+            await User.findByIdAndUpdate(args.userId, {
+                $push:{
+                    followers: (context().req as UserLoginRequest).user.id
+                }
+            }, {new: true})
+            return {
+                msg: "request successful"
+            }
+        }
+        catch(err){
+            console.log(err)
+            return err
+        }
+    }
+}
+
+export const Unfollow = {
+    type: RequestResponse,
+    args:{
+        userId: {type: GraphQLID}
+    },
+    async resolve(parent:any, args:{userId : string}, context: Context){
+        try{
+            await User.findByIdAndUpdate(args.userId, {
+                $pull:{
+                    followers: (context().req as UserLoginRequest).user.id
+                }
+            }, {new: true})
+            return {
+                msg: "request successful"
+            }
+        }
+        catch(err){
+            console.log(err)
         }
     }
 }

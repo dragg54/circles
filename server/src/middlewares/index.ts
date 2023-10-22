@@ -8,6 +8,10 @@ export const middleWare = {
         createCommunity: IsAuthenticated,
         deleteCommunity: IsAuthorizedAuthor,
         deleteCommunityMember: IsAuthorizedAuthor,
+        follow: IsAuthenticated,
+        unfollow: IsAuthenticated,
+        likePost: IsAuthenticated,
+        unlikePost: IsAuthenticated
     },
     RootQuery:{
         userCommunities: IsAuthenticated,
