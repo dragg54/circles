@@ -36,7 +36,8 @@ function App() {
             <Route path="/post" element={<Post />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/signin" element={<Signin />} />
-            <Route path="/user" element={<User />} />
+            <Route path="/user/:id" element={<User />} />
+            <Route path="/currentUser/:id" element={<User />} />
           </Routes>
         </Router>
     </body>

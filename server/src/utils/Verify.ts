@@ -16,6 +16,9 @@ const token: string = req.headers.auth as string
         const user = {
             id: (decoded as UserLoginPayload).id,
             userName: (decoded as UserLoginPayload).userName,
+            profilePicture: (decoded as UserLoginPayload).profilePicture,
+            following: (decoded as UserLoginPayload).following,
+            followers: (decoded as UserLoginPayload).followers,
             email: (decoded as UserLoginPayload).email,
             bio: (decoded as UserLoginPayload).bio
         }

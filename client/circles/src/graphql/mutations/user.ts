@@ -8,3 +8,17 @@ export const LoginUser = gql`
         }
     }
 `
+export const FOLLOW = gql`
+    mutation Follow($userId: ID){
+        follow(userId: $userId){
+            msg
+        }
+    }
+`
+export const UNFOLLOW = gql`
+    mutation UnFollow($userId: ID){
+        unfollow(userId: $userId){
+            msg
+        }
+    }
+`

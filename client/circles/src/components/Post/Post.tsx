@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client"
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
 import { GET_ALL_POSTS } from "../../graphql/queries/post"
 import { CommunityType } from "../../types/Community"
 import { PostState } from "../../types/States"
@@ -21,13 +20,9 @@ type UserState = {
 }
 export const Post = ({width}: {width:number | string}) => {
     const user = useSelector(state => (state as UserState).auth).user
-    const navigate = useNavigate()
-    function goToPost() {
-        navigate("/post")
-    }
     const { data, error, loading } = useQuery(GET_ALL_POSTS, {
         variables: {
-            community: user.communities?.map((comm)=> (comm as CommunityType)._id) 
+            community: user?.communities?.map((comm)=> (comm as CommunityType)._id) 
         }
     })
     const dispatch = useDispatch()
@@ -42,11 +37,11 @@ export const Post = ({width}: {width:number | string}) => {
         <>
         {!loading && posts &&  posts.map((post: IPost) => {
             return (
-                <div key={post._id} onClick={goToPost} className={`cursor-pointer w-${width} bg-white rounded-md shadow-md p-4 h-auto mb-5 border-l-4 border-r border-t border-[#333A44] border-b-4 shadow-gray-400 `}>
-                    <PostHeader />
+                <div key={post._id}  className={`cursor-pointer w-${width} bg-white rounded-md shadow-md p-4 h-auto mb-5 border-l-4 border-r border-t border-[#333A44] border-b-4 shadow-gray-400 `}>
+                    <PostHeader post={post}/>
                     <PostTopic topic={post.topic} />
                     <PostContent content={post.body} image={(post.image as string)} />
-                    <PostReactions  liked = {post.likedBy}/>
+                    <PostReactions  post = {post}/>
                 </div>
             )
         })}

@@ -23,7 +23,10 @@ const PostForm = () => {
         image: null,
         community: "" as string,
         error: '',
-        userName: currentUser.userName,
+        user: {
+            userName: '',
+            profilePic: ''
+        },
         likedBy: [],
         createdBy: currentUser.id,
         createdAt: Date.now(),
@@ -70,6 +73,8 @@ const PostForm = () => {
             });
             const newPost = result.data.createPost
             formObj.image = newPost.image
+            newPost.user.profilePic = currentUser.profilePicture
+            newPost.user.userName = currentUser.userName
             dispatch(addPost({post: newPost}))
             dispatchModal(isClosed({formName:''}))
             toggleResponseModal(`Post successfully sent`)

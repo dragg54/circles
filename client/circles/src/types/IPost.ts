@@ -7,7 +7,10 @@ export interface IPost{
     image: File | null | string,
     community: string | PostCommunity | null
     error: string,
-    userName: string,
+    user: {
+        userName: string,
+        profilePic: string
+    }
     likedBy: []
     dislikedBy:[]
     createdBy:string

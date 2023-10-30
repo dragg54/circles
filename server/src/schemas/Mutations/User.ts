@@ -26,7 +26,7 @@ export const CreateUser = {
     },
     async resolve(parent: any, args: any, context: any) {
         try {
-            const existingUser: unknown = await User.findOne({email: args.email}).or([{userName: args.userName}])
+            const existingUser: unknown = await User.findOne({ email: args.email }).or([{ userName: args.userName }])
             if (existingUser) {
                 throw new DuplicateError("User already exists")
             }
@@ -78,13 +78,14 @@ export const LoginUser = {
             if (!isMatch) {
                 throw new Error("Password is incorrect")
             }
-            const userCommunities  = await Community.find({
+            const userCommunities = await Community.find({
                 communityMembers: {
                     $in: [existingUser._id]
-        }}).select("_id")
-            const token = jwt.sign({ id: existingUser._id, email: existingUser.email, userName: existingUser.userName, bio: existingUser.bio, profilePictue: existingUser.profilePicture, communities: userCommunities }, process.env.SECRET_KEY!)
-            context().res.cookie('auth', token, { maxAge: 3600000, httpOnly: true, sameSite:"lax"})
-            return {status: "OK", token}
+                }
+            }).select("_id")
+            const token = jwt.sign({ id: existingUser._id, email: existingUser.email, userName: existingUser.userName, bio: existingUser.bio, profilePicture: existingUser.profilePic, communities: userCommunities }, process.env.SECRET_KEY!)
+            context().res.cookie('auth', token, { maxAge: 3600000, httpOnly: true, sameSite: "lax" })
+            return { status: "OK", token }
         }
         catch (err) {
             console.log(err)
@@ -95,21 +96,21 @@ export const LoginUser = {
 
 export const Follow = {
     type: RequestResponse,
-    args:{
-        userId: {type: GraphQLID}
+    args: {
+        userId: { type: GraphQLID }
     },
-    async resolve(parent:any, args:{userId : string}, context: Context){
-        try{
+    async resolve(parent: any, args: { userId: string }, context: Context) {
+        try {
             await User.findByIdAndUpdate(args.userId, {
-                $push:{
+                $push: {
                     followers: (context().req as UserLoginRequest).user.id
                 }
-            }, {new: true})
+            }, { new: true })
             return {
                 msg: "request successful"
             }
         }
-        catch(err){
+        catch (err) {
             console.log(err)
             return err
         }
@@ -118,21 +119,21 @@ export const Follow = {
 
 export const Unfollow = {
     type: RequestResponse,
-    args:{
-        userId: {type: GraphQLID}
+    args: {
+        userId: { type: GraphQLID }
     },
-    async resolve(parent:any, args:{userId : string}, context: Context){
-        try{
+    async resolve(parent: any, args: { userId: string }, context: Context) {
+        try {
             await User.findByIdAndUpdate(args.userId, {
-                $pull:{
+                $pull: {
                     followers: (context().req as UserLoginRequest).user.id
                 }
-            }, {new: true})
+            }, { new: true })
             return {
                 msg: "request successful"
             }
         }
-        catch(err){
+        catch (err) {
             console.log(err)
         }
     }

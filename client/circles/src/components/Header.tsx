@@ -1,4 +1,4 @@
-import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import ProfilePicture from './ProfilePicture'
 import CreateButton from './Buttons/CreateButton'
 import { PiBellThin, PiMusicNotesSimpleLight } from 'react-icons/pi'
@@ -6,23 +6,21 @@ import { FiHome } from 'react-icons/fi'
 import { PiMagnifyingGlassThin } from 'react-icons/pi'
 import CommunityModal from './Modals/CommunityModal'
 import { fetchPosts } from '../redux/Post'
-import { PostState } from '../types/States'
+import {  UserState } from '../types/States'
 import { PostCommunity } from '../types/IPost'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLazyQuery, useQuery } from '@apollo/client'
 import { GET_USER_COMMUNITIES } from '../graphql/queries/community'
 import { GET_ALL_POSTS } from '../graphql/queries/post'
 import { useNavigate } from 'react-router-dom'
 
 const Header = () => {
-    interface SelectTarget extends EventTarget {
-        value: string
-    }
     const [communityValue, setComunityValue ] = useState("")
+    const user = useSelector(state => (state as UserState).auth.user)
 
     const dispatch = useDispatch()
-    const navigate = useNavigate()
     const { data: community, error, loading } = useQuery(GET_USER_COMMUNITIES)
+    const navigate = useNavigate()
     
     async function handleCommunityChange(e:ChangeEvent<HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement>){
         setComunityValue(e.target.value)
@@ -40,6 +38,8 @@ const Header = () => {
         }      
     }
 
+    console.log(user)
+
 
     
     const [getPosts, {error: postError, loading: postLoading}] = useLazyQuery(GET_ALL_POSTS)
@@ -50,7 +50,7 @@ const Header = () => {
     return (
         <div className='w-full h-20 bg-white border-b border-gray-400 shadow-md flex justify-between items-center px-10 fixed top-0 z-10'>
             <div className='flex justify-center items-center gap-16 relative w-1/3'>
-                <h4>Circles</h4>
+                <h4 className='cursor-pointer' onClick={()=> navigate("../")}>Circles</h4>
                 <FiHome className="w-7 h-7 text-gray-700" />
                 <CommunityModal value={communityValue}  communitySelectedHeading={'Community'} name={''} handleformChange={function (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement>): void {
                     handleCommunityChange(e)
@@ -62,7 +62,7 @@ const Header = () => {
             </div>
             <div className='w-1/3 flex justify-end gap-4 items-center'>
                 <PiBellThin className='w-8 h-8 font-light text-gray-500' />
-                <ProfilePicture height={12} width={12} />
+                <ProfilePicture height={12} width={12} profilePicture={user.profilePicture}/>
                 <CreateButton />
             </div>
         </div>

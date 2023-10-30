@@ -19,7 +19,7 @@ export const SigninForm = () =>{
       email?: string,
       password?: string
     }
-    const [ loginUserMutation ] =  useMutation(LoginUser)
+    const [ loginUserMutation, {error, loading} ] =  useMutation(LoginUser)
     const [loginDetails, setLoginDetails ] = useState({email: "", password: ""})
     const dispatch = useDispatch()
   
@@ -37,7 +37,8 @@ export const SigninForm = () =>{
         },
       });
       const response = result.data.loginUser
-     if(response && response.status == "OK"){
+     if(!error && !loading){
+      console.log(response)
       dispatch(fetchAuth({token: response.token}))
       localStorage.setItem("auth", JSON.stringify(response.token))
       navigate("/")

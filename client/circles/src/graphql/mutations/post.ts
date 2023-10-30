@@ -28,7 +28,7 @@ export const LikePost = gql`
     mutation LikePost(
         $postId: ID
     ){
-        likePost(postId: $ID){
+        likePost(postId: $postId){
             msg
         }
     }
@@ -38,7 +38,7 @@ export const UnLikePost = gql`
     mutation UnlikePost(
         $postId: ID
     ){
-        unlikePost(postId: $ID){
+        unlikePost(postId: $postId){
             msg
         }
     }

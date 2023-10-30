@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLObjectType, GraphQLString } from "graphql";
+import { GraphQLID, GraphQLList, GraphQLObjectType, GraphQLString } from "graphql";
 
 const PostCommunity = new GraphQLObjectType({
     name:"PostCommunity",
@@ -13,7 +13,7 @@ const PostUser = new GraphQLObjectType({
     fields:{
         _id: {type: GraphQLString},
         userName: {type: GraphQLString},
-        profilePicture: {type: GraphQLString}
+        profilePic: {type: GraphQLString}
     }
 })
 
@@ -29,6 +29,7 @@ export const PostType = new GraphQLObjectType({
         user: {type: PostUser},
         topic: {type: GraphQLString},
         body: {type: GraphQLString},
+        likedBy:{type: new GraphQLList(GraphQLID)},
         createdBy: {type: GraphQLString},
         createdAt: {type: GraphQLString},
     }

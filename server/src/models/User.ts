@@ -22,6 +22,12 @@ export const UserSchema = new mongoose.Schema({
             ref: "User"
         }
     ],
+    following:[
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: "User"
+        }
+    ],
     bio:{
         type: String,
         require: true

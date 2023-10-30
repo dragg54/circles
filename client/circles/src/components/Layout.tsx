@@ -1,6 +1,5 @@
 import React from 'react'
 import Header from './Header'
-import User from './Modals/UserModal'
 import UserModal from './Modals/UserModal'
 import { useDispatch } from 'react-redux'
 import { closeUserModal, openUserModal } from '../redux/UserModal'
@@ -19,11 +18,9 @@ const Layout = ({children}: {children: React.ReactNode}) => {
   function toggleUserModal(){
     document.addEventListener('click', (e)=>{
       if((e.target as ModalTarget).id == "user-settings" || (e.target as ModalTarget).parentNode.id == "user-settings"){
-        console.log("red")
         dispatch(openUserModal())
       }
       else{
-        console.log("yellow")
         dispatch(closeUserModal())
       }
     })

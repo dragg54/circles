@@ -4,6 +4,7 @@ import { GetCommunityPosts, GetPosts, GetPostsById, GetPostsByUserId } from './Q
 import { CreatePost, DeletePost, LikePost, UnlikePost, UpdatePost } from './Mutations/Post'
 import { AddCommunityMembers, CreateCommunity, DeleteCommunity, JoinCommunities, RemoveCommunityMember, UpdateCommunity } from './Mutations/Community'
 import { GetCommunities, GetCommunitiesById, GetCommunitiesByUserId } from './Queries/Community'
+import { GetUserById } from './Queries/User'
 
 const RootQuery = new GraphQLObjectType({
     name: "RootQuery",
@@ -13,7 +14,8 @@ const RootQuery = new GraphQLObjectType({
         postsByUser: GetPostsByUserId,
         communities: GetCommunities,
         userCommunities: GetCommunitiesByUserId,
-        allCommunityPosts: GetCommunityPosts
+        allCommunityPosts: GetCommunityPosts,
+        user: GetUserById
     }
 })
 

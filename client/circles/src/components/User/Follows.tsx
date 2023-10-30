@@ -2,7 +2,7 @@ import React from 'react'
 
 const Follows = () => {
   return (
-    <div className='w-120 flex justify-between gap-4'>
+    <div className='w-120 flex justify-between gap-2'>
         <p>120</p>
         <p>Following</p>
         <p>.</p>

@@ -88,6 +88,7 @@ export const DeletePost = {
             return "Post deleted"
         }
         catch (err) {
+            console.log(err)
             throw new Error(err as string)
         }
     }
@@ -109,6 +110,7 @@ export const LikePost = {
 
         }
         catch (err) {
+            console.log(err)
             throw new InternalServerError(err as string)
         }
     }
@@ -130,6 +132,7 @@ export const UnlikePost = {
 
         }
         catch (err) {
+            console.log(err)
             throw new InternalServerError(err as string)
         }
     }

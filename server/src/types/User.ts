@@ -6,7 +6,9 @@ export interface IUser{
     id?:string,
     _id?: typeof mongoose.Schema.ObjectId,
     userName: string,
-    profilePicture?: Buffer,
+    profilePic?: Buffer,
+    following: [],
+    followers: []
     email: string,
     password?: string,
     bio: string

@@ -10,8 +10,8 @@ export const GET_COMMUNITIES = gql`
 `
 
 export const GET_USER_COMMUNITIES = gql`
-    query GetCommunity{
-        userCommunities {
+    query GetCommunity($userId: ID){
+        userCommunities(userId: $userId) {
         _id
         communityName
         }

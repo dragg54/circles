@@ -10,7 +10,7 @@ export const GetPosts = {
         try {
             let posts: IPost[];
             var allPosts: unknown | IPost[] = await Post.find()
-            .populate("user", "userName profilePicture")
+            .populate("user", "userName profilePic")
             .populate("community", "communityName")
             // .limit(20)
             .lean();
@@ -28,14 +28,13 @@ export const GetCommunityPosts = {
         community: {type: new GraphQLList(GraphQLID)}
     },
     async resolve(parent:any, args: any){
-        console.log(args.community)
         try{
             const posts = await Post.find({
                 community:{
                     $in: args.community
                 }
             })
-            .populate("user", "userName profilePicture")
+            .populate("user", "userName profilePic")
             .populate("community", "communityName")
             return posts
         }
@@ -49,11 +48,13 @@ export const GetCommunityPosts = {
 export const GetPostsByUserId = {
     type: new GraphQLList(PostType),
     args: {
-        userId: { type: GraphQLString }
+        userId: { type: GraphQLID }
     },
     async resolve(parent: any, args: any){
         try {
             const posts = await Post.find({ createdBy: args.userId })
+            .populate("user", "userName profilePic")
+            .populate("community", "communityName")
             return posts
         }
         catch (err) {
@@ -64,10 +65,12 @@ export const GetPostsByUserId = {
 
 export const GetPostsById = {
     type: PostType,
-    args: {id: {type: GraphQLString}},
+    args: {id: {type: GraphQLID}},
     async resolve(parent: any, args: any) {
         try {
             const post = await Post.find({ _id: args.id })
+            .populate("user", "userName profilePic")
+            .populate("community", "communityName")
             return post
         }
         catch (err) {

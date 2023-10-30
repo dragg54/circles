@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PostState } from "../types/States";
 import { IPost } from "../types/IPost";
-import { IUser } from "../types/User";
 
 const postSlice = createSlice({
     name: 'post',
@@ -12,7 +11,6 @@ const postSlice = createSlice({
         body: '',
         image:null,
         community: null,
-        userName: '',
         error: '',
         likedBy: [],
         dislikedBy: [],
@@ -38,22 +36,25 @@ const postSlice = createSlice({
            }
            return [...state, newPost]
         },
-        likePost:(state, action: {payload:{ user: IUser, postId: string}})=>{
+        likePost:(state, action: {payload:{ userId: string, postId: string}})=>{
             const post = state.find(post => post._id == action.payload.postId)
-            if(post && !post.likedBy.includes(action.payload.user)){
-                post.likedBy.push(action.payload.user)
+            const postIndex = state.findIndex(pst => pst._id == action.payload.postId)
+            if(post && post.likedBy.length && post.likedBy.includes(action.payload.userId)){
+                state[postIndex] = null
+                const likeIndex = post.likedBy.findIndex((x)=> x == action.payload.userId)
+                post.likedBy.splice(likeIndex, 1)
+                state[postIndex] = post
             }
-            return state
-        },
-        unLikePost:(state, action: {payload:{ user: IUser, postId: string}})=>{
-            const post = state.find(post => post._id == action.payload.postId)
-            if(post && post.likedBy.includes(action.payload.user) && post){
-                post.likedBy.pop()
+            else if(post){
+                state[postIndex] = null
+                post.likedBy.push(action.payload.userId)
+                state[postIndex] = post
             }
+            console.log(state)
             return state
         },
     },
 });
 
-export const { fetchPosts, addPost } = postSlice.actions;
+export const { fetchPosts, addPost, likePost } = postSlice.actions;
 export default postSlice.reducer;
