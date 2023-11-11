@@ -23,7 +23,7 @@ const UserModal = () => {
     }
   return (
     <div className={` w-48 h-[460px] bg-white right-32 top-20 fixed ${openUserModal? 'block':'hidden'}`}>
-        <ul className='mt-4 flex flex-col items-center text-gray-500'  id='user-settings' >
+        <ul className='mt-4 flex flex-col items-center text-gray-500'  >
             <Link className='user-settings' to={`/currentUser/${user.user.id}`} onClick={closeModal}><CgProfile/> Profile</Link>
             <li className='user-settings cursor-pointer'><RiGroupLine/> Communities</li>
             <li className='user-settings cursor-pointer'><CiSettings /> Settings</li>

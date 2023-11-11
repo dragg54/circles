@@ -24,7 +24,7 @@ function App() {
   })
   return (
     <body className={`relative ${globalModal.isOpened ? 'h-screen' : 'h-auto'} ${globalModal.isOpened ? 'overflow-hidden' : 'h-auto'}`}>
-      <div className={`absolute ${globalModal.isOpened ? 'flex' : 'hidden'} bg-[rgba(220,220,220,0.7)]  w-screen z-30  h-screen justify-center pt-24 items-start`} id='modal'>
+      <div className={`absolute ${globalModal.isOpened ? 'flex' : 'hidden'} bg-[rgba(220,220,220,0.7)]  w-screen z-50  h-screen justify-center pt-24 items-start`} id='modal'>
         <div className='w-2/5'>
           {globalModal.formName == "CreatePost" ? <PostForm /> : ""}
         </div>

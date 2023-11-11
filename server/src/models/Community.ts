@@ -11,7 +11,6 @@ const CommunitySchema = new mongoose.Schema({
         {
             type: mongoose.Schema.ObjectId,
             ref: "User",
-            default: []
         }
        ]    ,
     communityDescription:{

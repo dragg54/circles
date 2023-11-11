@@ -9,7 +9,7 @@ import { ICommunity } from "../../types/ICommunity";
 import { readFile } from "../../middlewares/file";
 import { ErrorType } from "../Typedefs/Error";
 import { Context } from "../../types/Context";
-import { RequestResponse } from "../Typedefs/Response";
+import { SuccessResponse } from "../Typedefs/Response";
 const { GraphQLUpload, FileUpload } = require('graphql-upload')
 
 export const CreatePost = {
@@ -95,7 +95,7 @@ export const DeletePost = {
 }
 
 export const LikePost = {
-    type: RequestResponse,
+    type: SuccessResponse,
     args: {
         postId: { type: GraphQLID }
     },
@@ -117,7 +117,7 @@ export const LikePost = {
 }
 
 export const UnlikePost = {
-    type: RequestResponse,
+    type: SuccessResponse,
     args: {
         postId: { type: GraphQLID }
     },

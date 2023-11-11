@@ -22,3 +22,12 @@ export const UNFOLLOW = gql`
         }
     }
 `
+
+export const CREATE_NEW_USER = gql`
+    mutation CreateNewUser($userName: string, $email: string, $bio: string, $password: string){
+        createUser(userName: $userName, email: $email, bio: $bio, password: $password){
+            userName
+            email
+        }
+    }
+`

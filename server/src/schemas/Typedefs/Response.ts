@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLString } from "graphql";
 
-export const RequestResponse = new GraphQLObjectType({
+export const SuccessResponse = new GraphQLObjectType({
     name: "RequestResponse",
     fields:{
         msg: {type: GraphQLString}

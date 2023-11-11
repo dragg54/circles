@@ -38,8 +38,6 @@ const Header = () => {
         }      
     }
 
-    console.log(user)
-
 
     
     const [getPosts, {error: postError, loading: postLoading}] = useLazyQuery(GET_ALL_POSTS)
@@ -48,7 +46,7 @@ const Header = () => {
         return <p>Loading...</p>
     }
     return (
-        <div className='w-full h-20 bg-white border-b border-gray-400 shadow-md flex justify-between items-center px-10 fixed top-0 z-10'>
+        <div className='w-full col-start-1 col-span-8 row-start-1 h-20 bg-white border-b border-gray-400 shadow-md flex justify-between items-center px-10 fixed top-0 z-10'>
             <div className='flex justify-center items-center gap-16 relative w-1/3'>
                 <h4 className='cursor-pointer' onClick={()=> navigate("../")}>Circles</h4>
                 <FiHome className="w-7 h-7 text-gray-700" />
@@ -62,7 +60,7 @@ const Header = () => {
             </div>
             <div className='w-1/3 flex justify-end gap-4 items-center'>
                 <PiBellThin className='w-8 h-8 font-light text-gray-500' />
-                <ProfilePicture height={12} width={12} profilePicture={user.profilePicture}/>
+                <ProfilePicture height={12} width={12} profilePicture={user.profilePicture} id='user-settings'/>
                 <CreateButton />
             </div>
         </div>

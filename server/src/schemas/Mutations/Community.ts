@@ -6,6 +6,7 @@ import { IUser } from "../../types/User"
 import { Context } from "../../types/Context"
 import { GetCommunitiesById } from "../Queries/Community"
 import { ICommunity } from "../../types/ICommunity"
+import { SuccessResponse } from "../Typedefs/Response"
 
 export const CreateCommunity = {
     type: CommunityType,
@@ -15,7 +16,6 @@ export const CreateCommunity = {
         communityDescription: { type: GraphQLString! }
     },
     resolve(parent: string, args: { communityName: string, communityDescription: string, parentCommunityId: string, author: string }, context: any) {
-        console.log(args)
         try {
             const community = new Community({
                 parentCommunityUniqueReferenceNumber: args.parentCommunityId,
@@ -98,7 +98,7 @@ export const AddCommunityMembers = {
 }
 
 export const JoinCommunities = {
-    type: new GraphQLList(CommunityType),
+    type: SuccessResponse,
     args: {
         communityId: {type: new GraphQLList(GraphQLID)},
         userId: {type: GraphQLID}
@@ -106,13 +106,18 @@ export const JoinCommunities = {
     async resolve(parent: any, args: any){
        try{
         args.communityId.forEach((community: ICommunity)=>{
-            if(community.communityMembers.includes(args.userId)){
-                throw new Error(`User is already a member of community with id ${community._id}`)
-            }
-            const newCommunityMembers = [...community.communityMembers, args.userId]
-            Community.findOneAndUpdate({_id:args.communityId }, { communityMembers: newCommunityMembers})
+            if(community.communityMembers?.includes(args.userId)){
+                throw new Error(`User is already a member of community with id ${community}`)
+            }            
+            const comm =  Community.updateMany(community , {
+                $push:{
+                    communityMembers: args.userId
+                }
+            }, {new: true})
+            console.log(comm)
         })
-       }
+        return {msg: "User added to communities"}
+    }
        catch(err){
         console.log(err)
         return(err)

@@ -12,7 +12,6 @@ const token: string = req.headers.auth as string
     }    
     try{
         const decoded = jwt.verify(token, process.env.SECRET_KEY!)
-        console.log(decoded)
         const user = {
             id: (decoded as UserLoginPayload).id,
             userName: (decoded as UserLoginPayload).userName,

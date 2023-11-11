@@ -9,6 +9,8 @@ import { GETUSER } from '../../graphql/queries/user'
 import { FOLLOW, UNFOLLOW } from '../../graphql/mutations/user'
 import { GET_USER_COMMUNITIES } from '../../graphql/queries/community'
 import { CommunityType } from '../../types/Community'
+import LoadingSpinner from '../Loaders/LoadingSpinner'
+import { current } from '@reduxjs/toolkit'
 
 type UserState = {
   auth: UserAuth
@@ -38,7 +40,7 @@ const {data: userCommunities, error: userCommunitiesError, loading: userCommunit
 
   // const user = useSelector(state => ((state as UserState).auth.user))
   if(loading || followUserLoading || unFollowUserLoading || userCommunitiesLoading || !id){
-    return( <>Loading...</>
+    return(<LoadingSpinner loading={followUserLoading && userCommunitiesLoading && unFollowUserLoading}/>
     )
   }
 
@@ -46,7 +48,6 @@ const {data: userCommunities, error: userCommunitiesError, loading: userCommunit
     return(<>{error}</>)
   }
 
-  console.log("communities", userCommunities)
 
   async function follow(){
     if(!isFollowing){
@@ -89,7 +90,7 @@ const {data: userCommunities, error: userCommunitiesError, loading: userCommunit
           <button onClick={()=>{
             setIsFollowing(!isFollowing)
             follow()
-          }} className='rounded-xl px-4 py-2 bg-gray-700 font-semibold text-white text-xs'>{isFollowing?'Following': "Follow"}</button>
+          }} className={`rounded-xl px-4 py-2 bg-gray-700 font-semibold text-white text-xs ${user.user._id == currentUser.user.id? 'hidden': 'block'}`}>{isFollowing?'Following': "Follow"}</button>
         </div>
     </div>
   )

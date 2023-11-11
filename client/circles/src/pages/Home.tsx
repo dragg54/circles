@@ -1,16 +1,24 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import Layout from '../components/Layout'
-import { Post } from '../components/Post/Post'
 
 const Home = () => {
+  const Post = lazy(()=> import('../components/Post/Post'))
   return (
    <Layout>
      <main className='w-screen h-auto flex flex-col justify-start items-center mt-32'>
-      <div className='w-1/2 flex flex-col justify-start items-center'>
-        <Post width={"full"}/>
+      <div className='w-full flex flex-col justify-start items-center'>
+       <Suspense fallback={< FallBackLoader />}>
+       <Post width={"full"}/>
+       </Suspense>
       </div>
     </main>
    </Layout>
+  )
+}
+
+const FallBackLoader = () =>{
+  return(
+    <>Loading</>
   )
 }
 

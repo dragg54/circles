@@ -2,9 +2,14 @@ import { useQuery } from '@apollo/client'
 import React, { ChangeEvent } from 'react'
 import { GET_USER_COMMUNITIES } from '../../graphql/queries/community'
 import { CommunityType } from '../../types/Community'
+import LoadingSpinner from '../Loaders/LoadingSpinner'
 
 export const CommunityModal = ({communitySelectedHeading, name, handleformChange, value}: {communitySelectedHeading: string, name: string, handleformChange:(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>)=> void, value: string}) => {
     const {data:community, error , loading} = useQuery(GET_USER_COMMUNITIES)
+if(!loading){
+    
+   <LoadingSpinner loading/>
+}
     if(!loading && !error){
         return (
             <div className="relative inline-block w-64">

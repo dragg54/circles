@@ -22,11 +22,13 @@ export const GetCommunitiesByUserId = {
     args:{userId: {type: GraphQLID}},
     async resolve(parent: any, args: any, context: Context){
         try {
+            console.log("user", (context().req as UserLoginRequest).user)
             const communities = await Community.find({
                 communityMembers:{
-                    $in:[args.userId]
+                    $in:[(context().req as UserLoginRequest).user.id]
                 }
             })
+            console.log("communities", communities)
             return communities
         }
         catch (err) {

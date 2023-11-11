@@ -6,7 +6,7 @@ import UserPosts from '../components/User/UserPosts'
 const User = () => {
   return (
    <Layout>
-     <div className='w-2/3 m-auto mt-28'>
+     <div className='w-full m-auto mt-28'>
         <UserDetails />
         <UserPosts width={"full"}/>
     </div>

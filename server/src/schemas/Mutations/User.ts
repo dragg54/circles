@@ -13,7 +13,7 @@ import { createReadStream } from "fs";
 import { Context } from "../../types/Context";
 import { getUser } from "../../utils/GetCurrentUser";
 import { Community } from "../../models/Community";
-import { RequestResponse } from "../Typedefs/Response";
+import { SuccessResponse } from "../Typedefs/Response";
 
 const { GraphQLUpload, FileUpload } = require('graphql-upload')
 export const CreateUser = {
@@ -95,7 +95,7 @@ export const LoginUser = {
 }
 
 export const Follow = {
-    type: RequestResponse,
+    type: SuccessResponse,
     args: {
         userId: { type: GraphQLID }
     },
@@ -118,7 +118,7 @@ export const Follow = {
 }
 
 export const Unfollow = {
-    type: RequestResponse,
+    type: SuccessResponse,
     args: {
         userId: { type: GraphQLID }
     },
