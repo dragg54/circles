@@ -22,7 +22,6 @@ const postSlice = createSlice({
     reducers: {
         fetchPosts: (state, action: { payload: { posts: PostState [] }}) => {
             const {posts} = action.payload
-            console.log(posts)
             return posts
         },
         addPost: (state, action: { payload:{post: PostState | IPost}}) =>{

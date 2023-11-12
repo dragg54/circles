@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { isClosed } from './redux/GlobalModal'
 import Post from './pages/Post'
 import User from './pages/User'
+import { ChildPost } from './components/Post/ChildPost'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 function App() {
@@ -33,7 +34,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/:community" element={<Home />} />
-            <Route path="/post" element={<Post />} />
+            <Route path="/post/:id" element={<Post />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/signin" element={<Signin />} />
             <Route path="/user/:id" element={<User />} />

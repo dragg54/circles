@@ -41,3 +41,24 @@ export const GET_ALL_POSTS_BY_USER = gql`
         }
     }
 `
+
+export const GET_POST = gql`
+    query GetPost($id: ID){
+        post(id: $id){
+            _id
+            topic
+            body
+            image
+            likedBy
+            community{
+                communityName
+            }
+            user{
+                userName
+                profilePic
+            }
+            createdAt
+            createdBy
+        }
+    }
+`

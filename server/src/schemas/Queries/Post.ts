@@ -68,9 +68,11 @@ export const GetPostsById = {
     args: {id: {type: GraphQLID}},
     async resolve(parent: any, args: any) {
         try {
-            const post = await Post.find({ _id: args.id })
+            const post = await Post.findOne({ _id: args.id })
             .populate("user", "userName profilePic")
             .populate("community", "communityName")
+            .lean()
+            console.log("post", post)
             return post
         }
         catch (err) {

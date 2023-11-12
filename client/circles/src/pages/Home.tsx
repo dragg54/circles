@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from 'react'
 import Layout from '../components/Layout'
 
 const Home = () => {
-  const Post = lazy(()=> import('../components/Post/Post'))
+  const Post = lazy(()=> import('../components/Post/PostComp'))
   return (
    <Layout>
      <main className='w-screen h-auto flex flex-col justify-start items-center mt-32'>
