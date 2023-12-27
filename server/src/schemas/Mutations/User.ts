@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLScalarType, GraphQLString } from "graphql";
+import { GraphQLID, GraphQLList, GraphQLScalarType, GraphQLString } from "graphql";
 import { UserLoginResponse, UserType } from "../Typedefs/User";
 import bcrypt from 'bcrypt'
 import { IUser, UserLoginRequest } from "../../types/User";
@@ -14,6 +14,8 @@ import { Context } from "../../types/Context";
 import { getUser } from "../../utils/GetCurrentUser";
 import { Community } from "../../models/Community";
 import { SuccessResponse } from "../Typedefs/Response";
+import mongoose from "mongoose";
+import { ICommunity } from "../../types/ICommunity";
 
 const { GraphQLUpload, FileUpload } = require('graphql-upload')
 export const CreateUser = {
@@ -22,10 +24,13 @@ export const CreateUser = {
         userName: { type: GraphQLString },
         email: { type: GraphQLString },
         password: { type: GraphQLString },
+        communities: { type: new GraphQLList(GraphQLID) },
         file: { type: GraphQLUpload }
     },
     async resolve(parent: any, args: any, context: any) {
+       const session = await mongoose.startSession()
         try {
+            session.startTransaction()
             const existingUser: unknown = await User.findOne({ email: args.email }).or([{ userName: args.userName }])
             if (existingUser) {
                 throw new DuplicateError("User already exists")
@@ -37,7 +42,7 @@ export const CreateUser = {
                     return bcrypt.hash(args.password!, salt)
                 })
                 .then(async hash => {
-                    const { userName, email, password, bio } = args
+                    const { userName, email, password, bio, communities } = args
                     const user = new User({
                         userName,
                         email,
@@ -47,9 +52,21 @@ export const CreateUser = {
                         createdAt: Date.now(),
                         createdBy: context.userId
                     })
-                    return user.save()
+                    user.save({session})
+                    communities.forEach(async(comm: string)=>{
+                        await Community.findByIdAndUpdate({
+                            _id: comm
+                        },{ $push: { communityMembers: comm } },
+                        { new: true })
+                    }, {session})
+                    await session.commitTransaction()
+                    session.endSession()
+                   
                 })
-                .catch(err => console.error("err", err.message))
+                .catch(async err => {
+                   await session.abortTransaction()
+                   session.endSession()
+                })
         }
         catch (err) {
             console.log(err)

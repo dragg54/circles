@@ -9,38 +9,39 @@ import { useDispatch, useSelector } from 'react-redux'
 import { isClosed } from './redux/GlobalModal'
 import Post from './pages/Post'
 import User from './pages/User'
-import { ChildPost } from './components/Post/ChildPost'
+import Layout from './components/Layout'
+import { FormTypes } from './types/Form'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 function App() {
   interface eventType extends EventTarget {
     id: string
   }
-  const globalModal = useSelector(state => (state as globalModalState).globalModal)
+  const globalModal = useSelector(state => (state as globalModalState).formModal)
   const dispatch = useDispatch()
   document.addEventListener("click", (event) => {
     if ((event.target as eventType).id == "modal") {
-      dispatch(isClosed({ formName: "" }))
+      dispatch(isClosed({ formName: FormTypes.createForm }))
     }
   })
   return (
-    <body className={`relative ${globalModal.isOpened ? 'h-screen' : 'h-auto'} ${globalModal.isOpened ? 'overflow-hidden' : 'h-auto'}`}>
-      <div className={`absolute ${globalModal.isOpened ? 'flex' : 'hidden'} bg-[rgba(220,220,220,0.7)]  w-screen z-50  h-screen justify-center pt-24 items-start`} id='modal'>
+    <body className={`relative ${globalModal?.isOpened ? 'h-screen' : 'h-auto'} ${globalModal?.isOpened ? 'overflow-hidden' : ''}`}>
+      <div className={`absolute ${globalModal?.isOpened ? 'flex' : 'hidden'} bg-[rgba(220,220,220,0.7)]  w-screen z-50  h-full justify-center pt-24 items-start`} id='modal'>
         <div className='w-2/5'>
-          {globalModal.formName == "CreatePost" ? <PostForm /> : ""}
+          {globalModal?.formName == FormTypes.createForm || FormTypes.editForm ? <PostForm /> : ""}
         </div>
       </div>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/:community" element={<Home />} />
-            <Route path="/post/:id" element={<Post />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/signin" element={<Signin />} />
-            <Route path="/user/:id" element={<User />} />
-            <Route path="/currentUser/:id" element={<User />} />
-          </Routes>
-        </Router>
+      <Router>
+        <Routes>
+        <Route path="/" element={<Home />} />
+          <Route path="/posts" element={<Home />} />
+          <Route path="/post/:id" element={<Post />} />
+          <Route path="/user/:id" element={<User />} />
+          <Route path="/currentUser/:id" element={<User />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/signin" element={<Signin />} />
+        </Routes>
+      </Router>
     </body>
   )
 }

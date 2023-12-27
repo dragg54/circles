@@ -25,7 +25,6 @@ export const CreatePost = {
         updatedBy: { type: GraphQLID },
     },
     async resolve(parent: string, args: { topic: string, body: string, image: any, parentPostId: string, user: string, author: string, community: string, createdBy: string, updatedBy: string }, context: any) {
-        console.log(args)
         try {
             let imageUrl = ''
             if (args.image) {
@@ -43,7 +42,6 @@ export const CreatePost = {
                 createdBy: args.createdBy,
                 updatedBy: args.updatedBy
             })
-            console.log(context().req.user.id)
             post.save()
             return post
         }

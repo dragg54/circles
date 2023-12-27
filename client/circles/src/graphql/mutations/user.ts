@@ -24,10 +24,11 @@ export const UNFOLLOW = gql`
 `
 
 export const CREATE_NEW_USER = gql`
-    mutation CreateNewUser($userName: string, $email: string, $bio: string, $password: string){
-        createUser(userName: $userName, email: $email, bio: $bio, password: $password){
+    mutation CreateNewUser($userName: string, $email: string, $bio: string, $password: string, $communities: [ID]){
+        createUser(userName: $userName, email: $email, bio: $bio, password: $password, communities: $communities){
             userName
             email
+            communities
         }
     }
 `

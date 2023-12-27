@@ -11,7 +11,7 @@ export const GetPosts = {
             let posts: IPost[];
             var allPosts: unknown | IPost[] = await Post.find()
             .populate("user", "userName profilePic")
-            .populate("community", "communityName")
+            .populate("community", "_id communityName")
             // .limit(20)
             .lean();
             return posts = allPosts as IPost[];
@@ -70,13 +70,31 @@ export const GetPostsById = {
         try {
             const post = await Post.findOne({ _id: args.id })
             .populate("user", "userName profilePic")
-            .populate("community", "communityName")
+            .populate("community", "_id communityName")
             .lean()
             console.log("post", post)
             return post
         }
         catch (err) {
             throw new Error(err as string)
+        }
+    }
+}
+
+export const GetPostComment = {
+    type: new GraphQLList(PostType),
+    args: {parentPostId: {type: GraphQLID}},
+    async resolve(_:any, args:any){
+        try{
+            const { parentPostId } = args
+            const posts = await Post.find({
+                parentPostId 
+            })
+            .populate("user", "userName profilePic")
+            return posts
+        }
+        catch(err){
+            console.log(err)
         }
     }
 }

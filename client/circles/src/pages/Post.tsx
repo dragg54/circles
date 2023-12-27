@@ -1,34 +1,40 @@
-import React, { useState } from 'react'
-import Layout from '../components/Layout'
-import { ParentPost } from '../components/Post/ParentPost'
-import { ChildPost } from '../components/Post/ChildPost'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
-import { GET_POST } from '../graphql/queries/post'
+import { GET_POST, GET_POST_COMMENTS } from '../graphql/queries/post'
 import LoadingSpinner from '../components/Loaders/LoadingSpinner'
-import { useDispatch } from 'react-redux'
-import { fetchPosts } from '../redux/Post'
 import PostComp from '../components/Post/PostComp'
-import { PostState } from '../types/States'
-import postcss from 'postcss'
+import Layout from '../components/Layout'
 
 const Post = () => {
+
   const {id} = useParams()
-  const dispatch = useDispatch()
   const { data:post, error: postError, loading: postLoading } = useQuery(GET_POST, {
     variables:{
       id
     }
   })
-  if(postLoading){
+  const { data: comment, error: commentError, loading: commentLoading} = useQuery(GET_POST_COMMENTS, {
+    variables:{
+      parentPostId: id
+    }
+  })
+
+  if(postLoading || commentLoading){
     return< LoadingSpinner loading={postLoading}/>
   }
-  console.log(post)
-  dispatch(fetchPosts({posts: (post?.post as PostState[])}))
+
+  if(commentError || postError){
+    return <>Something happened</>
+  }
+
+const _post = {...post.post, comments: comment.comments}
 
   return (
     <Layout>
-     <PostComp width={'full'}/>
+      <div className='mt-36 w-full'>
+      <PostComp width={'full'} posts={[_post]} loading={postLoading}/>
+      </div>
     </Layout>
   )
 }

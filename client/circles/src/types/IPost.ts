@@ -4,6 +4,7 @@ export interface IPost{
     parentPostId: string,
     topic: string
     body: string,
+    comments: IPost[] | null,
     image: File | null | string,
     community: string | PostCommunity | null
     error: string,
@@ -20,10 +21,14 @@ export interface IPost{
 }
 
 export type PostCommunity = {
-    id: string,
-    name: string
+    _id: string,
+    communityName: string
 }
 
 export type NewPost = Omit<IPost, 'createdBy'| 'createdAt'| 'updatedAt'| 'updatedBy' | 'likedBy' | 'dislikedBy'>
+
+export interface PostComment extends Omit<IPost, 'createdBy'| 'createdAt'| 'updatedAt'| 'updatedBy' | 'likedBy' | 'dislikedBy'>{
+    parentId: string
+}
 
 

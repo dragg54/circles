@@ -22,7 +22,8 @@ export const SigninForm = () =>{
     const [ loginUserMutation, {error, loading} ] =  useMutation(LoginUser)
     const [loginDetails, setLoginDetails ] = useState({email: "", password: ""})
     const dispatch = useDispatch()
-  
+    const navigate = useNavigate()
+
     function handleformChange(e: ChangeEvent<HTMLInputElement>){
       e.preventDefault()
       const {value, name} = e.target as LoginType
@@ -38,16 +39,14 @@ export const SigninForm = () =>{
       });
       const response = result.data.loginUser
      if(!error && !loading){
-      console.log(response)
       dispatch(fetchAuth({token: response.token}))
       localStorage.setItem("auth", JSON.stringify(response.token))
-      navigate("/")
+      navigate("/posts")
      }
     } catch (e) {
       // Handle errors
       console.error('Mutation error:', e);
     }  }
-    const navigate = useNavigate()
     return(
      <Form>
        <div className='w-full  flex flex-col gap-3'>
@@ -56,6 +55,9 @@ export const SigninForm = () =>{
       <input type="password" name="password" id="" placeholder='Password' value={loginDetails.password} onChange={handleformChange}/>
       <SubmitButton name="LOGIN" handleSubmit={handleMutation}/> 
     </div>
+    <p>Don't have an account? <span className='font-bold cursor-pointer' onClick={()=>{
+      navigate("/signup")
+    }}>Create</span></p>
      </Form>
     )
 }

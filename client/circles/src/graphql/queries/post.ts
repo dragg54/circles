@@ -4,11 +4,13 @@ export const GET_ALL_POSTS = gql`
     query GetAllCommunityPosts($community: [ID]){
         allCommunityPosts(community: $community){
             _id
+            parentPostId
             topic
             body
             image
             likedBy
             community{
+                _id
                 communityName
             }
             user{
@@ -51,6 +53,29 @@ export const GET_POST = gql`
             image
             likedBy
             community{
+                _id,
+                communityName
+            }
+            user{
+                userName
+                profilePic
+            }
+            createdAt
+            createdBy
+        }
+    }
+`
+
+export const GET_POST_COMMENTS = gql`
+    query GetComments($parentPostId: ID){
+        comments(parentPostId: $parentPostId){
+            _id
+            topic
+            body
+            image
+            likedBy
+            community{
+                _id,
                 communityName
             }
             user{

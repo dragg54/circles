@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PostState } from "../types/States";
-import { IPost } from "../types/IPost";
+import { IPost, PostComment } from "../types/IPost";
+import PostComment from "../components/Post/PostComment";
 
 const postSlice = createSlice({
     name: 'post',
@@ -9,6 +10,7 @@ const postSlice = createSlice({
         parentPostId: '',
         topic: '',
         body: '',
+        comments: null,
         image:null,
         community: null,
         error: '',
@@ -26,12 +28,14 @@ const postSlice = createSlice({
         },
         addPost: (state, action: { payload:{post: PostState | IPost}}) =>{
            const newPost = action.payload.post
-           const lastPostId = state[state.length - 1]._id
-           if(lastPostId){
-            newPost._id = lastPostId + 1
-           }
-           else{
-            newPost._id = 1
+           if(state.length){
+               const lastPostId = state[state.length - 1]._id
+               if(lastPostId){
+                newPost._id = lastPostId + 1
+               }
+               else{
+                newPost._id = 1
+               }
            }
            return [...state, newPost]
         },
@@ -49,11 +53,14 @@ const postSlice = createSlice({
                 post.likedBy.push(action.payload.userId)
                 state[postIndex] = post
             }
-            console.log(state)
             return state
         },
+        addComment:(state, action:{payload: {comment:IPost}})=>{
+           state[0].comments.push(action.payload.comment)
+            return state
+        }
     },
 });
 
-export const { fetchPosts, addPost, likePost } = postSlice.actions;
+export const { fetchPosts, addPost, likePost, addComment } = postSlice.actions;
 export default postSlice.reducer;

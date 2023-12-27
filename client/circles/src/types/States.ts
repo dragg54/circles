@@ -3,16 +3,18 @@ import { UserAuth } from "./User"
 
 export type AuthState = {
     auth: {
-        id: string,
-        userName: string,
-        token: string,
-        profilePicture: string
+        user: {
+            id: string,
+            userName: string,
+            token: string,
+            profilePicture: string
+        }
     }
 }
 
-export interface PostState extends Omit<IPost, 'community userName'>{
+export interface PostState extends Omit<IPost, 'community userName'> {
     community: PostCommunity
-    user:{
+    user: {
         userName: string,
         profilePic: string
     }

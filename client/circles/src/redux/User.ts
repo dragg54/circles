@@ -26,8 +26,17 @@ const userSlice = createSlice({
         return state
        }
     },
+    clearUser:()=>{
+      return{
+        userName: "",
+        profilePicture: "",
+        communities: [],
+        following: [],
+        followers: []
+    }
+    }
     }
   });
   
-  export const { getUser } = userSlice.actions;
+  export const { getUser, clearUser, follow } = userSlice.actions;
   export default userSlice;

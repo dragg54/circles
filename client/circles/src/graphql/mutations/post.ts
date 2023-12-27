@@ -3,11 +3,13 @@ import { gql } from "@apollo/client";
 export const CreatePostMutation = gql`
     mutation CreatePost(
         $community: ID,
+        $parentPostId: ID,
         $topic: String,
         $body: String,
         $image: Upload
     ){
-        createPost(topic:$topic, body: $body, community:$community, image: $image){
+        createPost(topic:$topic, body: $body, parentPostId: $parentPostId, community:$community, image: $image){
+            parentPostId
             topic
             body
             image

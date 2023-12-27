@@ -12,12 +12,12 @@ import thunk from 'redux-thunk';
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ['post', 'responseModal', 'userModal']
+  blacklist: ['post', 'responseModal', 'userModal', 'globalModal']
 
 }
 
 const rootReducer = combineReducers({
-  globalModal: GlobalModalSlice,
+  formModal: GlobalModalSlice,
   auth: AuthSlice,
   post: PostSlice,
   userModal: UserSlice,

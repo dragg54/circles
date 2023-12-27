@@ -2,7 +2,7 @@ import { GraphQLID, GraphQLList, GraphQLString } from "graphql"
 import { Community } from "../../models/Community"
 import { CommunityType } from "../Typedefs/Community"
 import { NotFoundError } from "../../types/Error"
-import { IUser } from "../../types/User"
+import { IUser, UserLoginRequest } from "../../types/User"
 import { Context } from "../../types/Context"
 import { GetCommunitiesById } from "../Queries/Community"
 import { ICommunity } from "../../types/ICommunity"
@@ -103,10 +103,10 @@ export const JoinCommunities = {
         communityId: {type: new GraphQLList(GraphQLID)},
         userId: {type: GraphQLID}
     },
-    async resolve(parent: any, args: any){
+    async resolve(parent: any, args: any, context: Context){
        try{
         args.communityId.forEach((community: ICommunity)=>{
-            if(community.communityMembers?.includes(args.userId)){
+            if(community.communityMembers?.includes((context().req as UserLoginRequest).user.id)){
                 throw new Error(`User is already a member of community with id ${community}`)
             }            
             const comm =  Community.updateMany(community , {
@@ -114,7 +114,6 @@ export const JoinCommunities = {
                     communityMembers: args.userId
                 }
             }, {new: true})
-            console.log(comm)
         })
         return {msg: "User added to communities"}
     }

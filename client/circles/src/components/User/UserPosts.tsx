@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { PostHeader } from '../Post/Postheader'
 import { PostTopic } from '../Post/PostTopic'
 import { PostContent } from '../Post/PostContent'

@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from 'react'
 import ProfilePicture from './ProfilePicture'
 import CreateButton from './Buttons/CreateButton'
-import { PiBellThin, PiMusicNotesSimpleLight } from 'react-icons/pi'
+import { PiBellThin, PiIntersectThreeThin, PiMusicNotesSimpleLight } from 'react-icons/pi'
 import { FiHome } from 'react-icons/fi'
 import { PiMagnifyingGlassThin } from 'react-icons/pi'
 import CommunityModal from './Modals/CommunityModal'
@@ -45,22 +45,23 @@ const Header = () => {
     if(loading){
         return <p>Loading...</p>
     }
+    if(user)
     return (
         <div className='w-full col-start-1 col-span-8 row-start-1 h-20 bg-white border-b border-gray-400 shadow-md flex justify-between items-center px-10 fixed top-0 z-10'>
             <div className='flex justify-center items-center gap-16 relative w-1/3'>
-                <h4 className='cursor-pointer' onClick={()=> navigate("../")}>Circles</h4>
+                <h4 className='cursor-pointer inline-flex gap-2 items-center' onClick={()=> navigate("../")}><PiIntersectThreeThin className="h-8 w-8"/> Circles</h4>
                 <FiHome className="w-7 h-7 text-gray-700" />
                 <CommunityModal value={communityValue}  communitySelectedHeading={'Community'} name={''} handleformChange={function (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement>): void {
                     handleCommunityChange(e)
                 }} />
             </div>
             <div className='relative w-1/3 flex justify-center'>
-                <input type='text' className='p-3 border-gray-400 border rounded-md outline-none' placeholder='search circles' />
-                <PiMagnifyingGlassThin className='absolute right-[31%] top-1/2 w-6 h-6 transform -translate-y-1/2 text-gray-400' />
+                <input type='text' className='p-3 border-gray-400 border outline-none !rounded-2xl' placeholder='search circles' />
+                <PiMagnifyingGlassThin className='absolute right-[28%] top-1/2 w-6 h-6 transform -translate-y-1/2 text-gray-400' />
             </div>
             <div className='w-1/3 flex justify-end gap-4 items-center'>
                 <PiBellThin className='w-8 h-8 font-light text-gray-500' />
-                <ProfilePicture height={12} width={12} profilePicture={user.profilePicture} id='user-settings'/>
+                <ProfilePicture height={12} width={12} profilePicture={user?.profilePicture} id='user-settings'/>
                 <CreateButton />
             </div>
         </div>

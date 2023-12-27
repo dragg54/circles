@@ -7,6 +7,7 @@ export const middleWare = {
         deletePost: IsAuthenticated,
         createCommunity: IsAuthenticated,
         deleteCommunity: IsAuthorizedAuthor,
+        joinCommunities: IsAuthenticated,
         deleteCommunityMember: IsAuthorizedAuthor,
         follow: IsAuthenticated,
         unfollow: IsAuthenticated,

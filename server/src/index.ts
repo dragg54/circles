@@ -43,7 +43,7 @@ const { graphqlUploadExpress} = require('graphql-upload')
 app.use('/', (express.static(path.join(__dirname, 'upload'))))
 const schemaWithMiddleware = applyMiddleware(schema, middleWare)
 app.use("/graphql",
-cors<cors.CorsRequest>({ origin:'http://localhost:5174', credentials:true}),
+cors<cors.CorsRequest>({ origin:'http://localhost:5173', credentials:true}),
 graphqlUploadExpress({ maxFileSize: 2500000, maxFiles: 10 }),
 graphqlHTTP((req, res)=>{
 return{

@@ -1,6 +1,8 @@
+import { FormTypes } from "./Form"
+
 export type globalModalState = {
-    globalModal: {
-        formName: string,
+    formModal: {
+        formName: FormTypes,
         isOpened: boolean
     }
 }

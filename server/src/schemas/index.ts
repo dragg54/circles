@@ -1,6 +1,6 @@
 import { GraphQLSchema, GraphQLObjectType } from 'graphql'
 import { CreateUser, Follow, LoginUser, Unfollow } from './Mutations/User'
-import { GetCommunityPosts, GetPosts, GetPostsById, GetPostsByUserId } from './Queries/Post'
+import { GetCommunityPosts, GetPostComment, GetPosts, GetPostsById, GetPostsByUserId } from './Queries/Post'
 import { CreatePost, DeletePost, LikePost, UnlikePost, UpdatePost } from './Mutations/Post'
 import { AddCommunityMembers, CreateCommunity, DeleteCommunity, JoinCommunities, RemoveCommunityMember, UpdateCommunity } from './Mutations/Community'
 import { GetCommunities, GetCommunitiesById, GetCommunitiesByUserId } from './Queries/Community'
@@ -15,7 +15,8 @@ const RootQuery = new GraphQLObjectType({
         communities: GetCommunities,
         userCommunities: GetCommunitiesByUserId,
         allCommunityPosts: GetCommunityPosts,
-        user: GetUserById
+        user: GetUserById,
+        comments: GetPostComment
     }
 })
 
