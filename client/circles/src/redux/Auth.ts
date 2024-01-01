@@ -12,9 +12,12 @@ const authSlice = createSlice({
         state.token = action.payload.token
         state.user = user
         return (state as UserAuth)
+      },
+      clearAuth:()=>{
+        return {token: "", user:null}
       }
     },
   });
   
-  export const { fetchAuth } = authSlice.actions;
+  export const { fetchAuth, clearAuth } = authSlice.actions;
   export default authSlice.reducer;

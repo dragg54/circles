@@ -29,6 +29,7 @@ const posts = useSelector(state => (state as PostType).post)
 if (loading || !posts) {
     return <LoadingSpinner {...{ loading }} />
 }
+console.log(data)
   const Post = lazy(()=> import('../components/Post/PostComp'))
   return (
      <Layout>
@@ -37,7 +38,7 @@ if (loading || !posts) {
        {/* <Suspense fallback={< FallBackLoader />}>
        <Post  width={"full"} posts={data.allCommunityPosts} loading={loading}/>
        </Suspense> */}
-       <PostComp width={'full'} loading={loading} posts={data.allCommunityPosts}/>
+       <PostComp type='posts' width={'full'} loading={loading} posts={data.allCommunityPosts}/>
       </div>
     </main>
      </Layout>

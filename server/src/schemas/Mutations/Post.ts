@@ -46,7 +46,6 @@ export const CreatePost = {
             return post
         }
         catch (err) {
-            console.log(context().req.user.id)
             return ({ msg: (err as Error).message })
         }
     }

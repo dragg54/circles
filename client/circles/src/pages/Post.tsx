@@ -28,12 +28,11 @@ const Post = () => {
     return <>Something happened</>
   }
 
-const _post = {...post.post, comments: comment.comments}
 
   return (
     <Layout>
       <div className='mt-36 w-full'>
-      <PostComp width={'full'} posts={[_post]} loading={postLoading}/>
+      <PostComp type='post' width={'full'} posts={[post.post]} loading={postLoading}/>
       </div>
     </Layout>
   )

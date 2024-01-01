@@ -6,9 +6,26 @@ import { GET_COMMUNITIES } from '../../graphql/queries/community'
 import { useMutation, useQuery } from '@apollo/client'
 import { CREATE_NEW_USER } from '../../graphql/mutations/user'
 import { LiaCommentSlashSolid } from 'react-icons/lia'
+import { Community } from '../../types/Community'
+import { PostCommunity } from '../../types/IPost'
+import { UserState } from '../../types/States'
+
+type Profile = {
+  userName: string,
+  email: string,
+  bio: string,
+  password: string,
+  community: string[]
+}
 
 export const SignupForm = ({page, setPage}: {page: number, setPage: React.Dispatch<React.SetStateAction<number>>}) => {
-  const [profile, setprofile] = useState({})
+  const [profile, setprofile] = useState<Profile>({
+    userName: "",
+    email: "",
+    bio: "",
+    password: "",
+    community: []
+  })
 
   const handleChange = (e: { target: { name: string; value: string } }) =>{
     setprofile({...profile, [e.target.name]: e.target.value})
@@ -19,24 +36,18 @@ export const SignupForm = ({page, setPage}: {page: number, setPage: React.Dispat
       </Form>
     )
   }
-  const Bio = ({page, setPage}: {page:number, setPage: React.Dispatch<React.SetStateAction<number>>}) =>{
-    const [profile, setprofile] = useState({
-      userName: "",
-      email: "",
-      bio: "",
-      password: ""
-    })
-
+  const Bio = ({page, setPage, setprofile, profile}: {page:number, setPage: React.Dispatch<React.SetStateAction<number>>, profile:Profile, setprofile:React.Dispatch<React.SetStateAction<Profile>> }) =>{
     const handleChange = (e: { target: { name: string; value: string } }) =>{
       setprofile({...profile, [e.target.name]: e.target.value})
+      console.log(profile)
     }
     return(
       <div className='w-full  flex flex-col gap-3'>
       <h1 className='self-start text-xl font-extrabold w-full border-b border-gray-300 py-3'>Set Up Account {`${page}/2`}</h1>
-        <input type="text" name="userName" placeholder='Username'/>
-        <input type="text" name="email" id="" placeholder='Email'/>
-        <input type="password" name="password" id="" placeholder='Password'/>
-        <textarea name="profile" id="" cols={20} rows={5} placeholder='profile'></textarea>
+        <input onChange={handleChange} value={profile.userName} type="text" name="userName" placeholder='Username'/>
+        <input onChange={handleChange} value={profile.email}  type="text" name="email" id="" placeholder='Email'/>
+        <input onChange={handleChange} value={profile.password}  type="password" name="password" id="" placeholder='Password'/>
+        <textarea onChange={handleChange} value={profile.bio}  name="bio" id="" cols={20} rows={5} placeholder='Bio'></textarea>
         <SubmitButton name="NEXT" handleSubmit={()=>setPage(2)}/> 
       </div>
     )
@@ -50,48 +61,43 @@ export const SignupForm = ({page, setPage}: {page: number, setPage: React.Dispat
     bio: string
   }, setPage: React.Dispatch<React.SetStateAction<number>>}) =>{
     const navigate = useNavigate()
-    const [community, setCommunity] = useState([{}])
+    const [community, setCommunity] = useState<PostCommunity[]>([])
     const { data: communities, error, loading } = useQuery(GET_COMMUNITIES)
     const [ createUser,{ error: createUserError, loading: createUserLoading}] = useMutation(CREATE_NEW_USER)
 
     function handleCommunityChange(e: { target: { checked: boolean; value: string, name: string, id: string } }){
       if(e.target.checked){
-        setCommunity([...(community.filter((comm)=> comm[e.target.name] !== e.target.id)), {[e.target.name]: "yesss"}])
-        console.log(community)
+        setCommunity({...community, [e.target.name]: e.target.id})
       }
       else{
-        setCommunity(community.filter(comm => comm != e.target.value))
+        const filtered = community.filter((comm)=> comm[e.target.name as keyof PostCommunity] != e.target.id)
+        setCommunity(filtered)
       }
     }
 
-    function saveUser(){
-      createUser({
-        variables:{
-         ...profile, communities: community
-        }
-      })
-     if(!createUserError && !createUserLoading){
-      navigate("/")
-     }
-    }
-
-    useEffect(()=>{
-      const comms = []
-      communities?.communities?.forEach((comm: { push: (arg0: { [x: number]: string }) => void; communityName: string })=>{
-        comms.push({
-          [comm.communityName as string]: ""
+   async function saveUser(){
+      try{
+        await createUser({
+          variables:{
+           ...profile, communities: Object.values(community)
+          }
         })
-      })
-      setCommunity(comms)
-    }, [communities])
+       if(!createUserError && !createUserLoading){
+        navigate("/signin")
+       }
+      }
+      catch(err){
+        console.log(err)
+      }
+    }
 
     return(
       <div className='w-full flex flex-col gap-3'>
       <h1 className='self-start text-xl font-extrabold w-full border-b border-gray-300 py-3'>Select Communities {`${page}/2`}</h1>
-       {!loading && !error && communities && communities.communities.length && communities.communities.map((comm: { map: React.Key; communityName: string, _id: string }, index: React.Key | number)=>{
+       {!loading && !error && communities && (communities.communities as Community[]).length && communities.communities.map((comm: { map: React.Key; communityName: string, _id: string }, index: React.Key | number)=>{
         return(
           <div className='flex items-center' key={index}>
-          <input type="checkbox" id={comm._id} onChange={handleCommunityChange} name={comm.communityName} value={((community.find((comms)=> comm._id == (comms as {_id: string})._id)) as {_id:string})?._id} checked={community?.includes(comm._id)} className='mr-2 w-4 h-4' />
+          <input type="checkbox" id={comm._id} onChange={handleCommunityChange} name={comm.communityName} value={(community.length > 0 && community.find((comms)=> comms[comm.communityName as keyof PostCommunity] == comm._id))[comm.communityName as keyof PostCommunity]}  checked={community.length && community.some((x)=> x[comm.communityName as keyof PostCommunity] == comm._id)} className='mr-2 w-4 h-4' />
             <label htmlFor={comm.communityName}>{comm.communityName} (23,000)</label>
           </div>
         )

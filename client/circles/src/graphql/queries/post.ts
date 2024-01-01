@@ -7,6 +7,10 @@ export const GET_ALL_POSTS = gql`
             parentPostId
             topic
             body
+            comments{
+                _id
+                body
+            }
             image
             likedBy
             community{
@@ -30,6 +34,18 @@ export const GET_ALL_POSTS_BY_USER = gql`
             topic
             body
             image
+            comments{
+                _id
+                body
+                user{
+                    _id
+                    userName
+                }
+                community{
+                    _id
+                    communityName
+                }
+            }
             likedBy
             community{
                 communityName
@@ -51,6 +67,18 @@ export const GET_POST = gql`
             topic
             body
             image
+            comments{
+                _id
+                body
+                user{
+                    _id
+                    userName
+                }
+                community{
+                    _id
+                    communityName
+                }
+            }
             likedBy
             community{
                 _id,
@@ -74,6 +102,18 @@ export const GET_POST_COMMENTS = gql`
             body
             image
             likedBy
+            comments{
+                _id
+                body
+                user{
+                    _id
+                    userName
+                }
+                community{
+                    _id
+                    communityName
+                }
+            }
             community{
                 _id,
                 communityName

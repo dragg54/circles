@@ -14,7 +14,14 @@ export const GetPosts = {
             .populate("community", "_id communityName")
             // .limit(20)
             .lean();
-            return posts = allPosts as IPost[];
+            const _posts:IPost[] = [];
+            (allPosts as IPost[]).forEach((post: IPost)=>{
+                if(!post.parentPostId){
+                    const _post = {...post, comments:  (allPosts as IPost[]).filter((pst)=> pst.parentPostId == post._id.toString())}
+                    _posts.push(_post)
+                }
+            })
+            return _posts
         }
         catch (err) {
             throw new Error(err as string)
@@ -29,14 +36,24 @@ export const GetCommunityPosts = {
     },
     async resolve(parent:any, args: any){
         try{
-            const posts = await Post.find({
+            const allPosts:unknown = await Post.find({
                 community:{
                     $in: args.community
                 }
             })
             .populate("user", "userName profilePic")
             .populate("community", "communityName")
-            return posts
+            .lean()
+
+            const _posts:IPost[] =[];
+            (allPosts as IPost[]).forEach((post: IPost)=>{
+                if(!post.parentPostId){
+                    const _post = {...post, comments:  (allPosts as IPost[]).filter((pst)=> pst.parentPostId == post._id.toString())}
+                    _posts.push(_post)
+                } 
+            })
+            console.log("post",_posts)
+            return _posts
         }
         catch(err){
             console.log(err)
@@ -64,16 +81,21 @@ export const GetPostsByUserId = {
 }
 
 export const GetPostsById = {
-    type: PostType,
+    type: PostResponse,
     args: {id: {type: GraphQLID}},
     async resolve(parent: any, args: any) {
         try {
-            const post = await Post.findOne({ _id: args.id })
+            const post:unknown = await Post.findOne({ _id: args.id })
             .populate("user", "userName profilePic")
             .populate("community", "_id communityName")
             .lean()
-            console.log("post", post)
-            return post
+            const posts: unknown = await Post.find()
+            .populate("user", "userName profilePic")
+            .populate("community", "_id communityName")
+            .lean()
+            console.log(posts)
+            const _post: IPost = {...(post as IPost), comments: (posts as IPost[]).filter((pst)=> pst.parentPostId == (post as IPost)._id.toString())}
+            return _post
         }
         catch (err) {
             throw new Error(err as string)

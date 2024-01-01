@@ -11,6 +11,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { UserState } from '../../types/States'
 import { closeUserModal } from '../../redux/UserModal'
 import { clearUser } from '../../redux/User'
+import { clearAuth } from '../../redux/Auth'
 
 type userModalState = {
     userModalReducer: boolean
@@ -34,6 +35,7 @@ const UserModal = () => {
             <li className='user-settings cursor-pointer'><LiaHandshakeSolid /> Terms</li>
             <li className='user-settings cursor-pointer border-none' onClick={()=>{
               navigate("/signin")
+              dispatch(clearAuth())
               dispatch(clearUser())
             }}><PiSignOutLight />Sign Out</li>
         </ul>

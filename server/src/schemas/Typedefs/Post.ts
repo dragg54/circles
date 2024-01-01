@@ -24,6 +24,15 @@ export const PostType = new GraphQLObjectType({
         // author: {type: GraphQLID},
         _id: {type: GraphQLID},
         parentPostId: {type: GraphQLID},
+        comments:{type: new GraphQLList(new GraphQLObjectType({
+            name: "Comment",
+            fields:{
+                _id: {type: GraphQLString},
+                body: {type: GraphQLString},
+                user: {type: PostUser},
+                community: {type: PostCommunity},
+            }
+        }))},
         image: {type: GraphQLString},
         community: {type: PostCommunity},
         user: {type: PostUser},
@@ -35,6 +44,8 @@ export const PostType = new GraphQLObjectType({
     }
 })
 
+
+
 export const PostResponse = new GraphQLObjectType({
     name: "PostResponse",
     fields:{
@@ -42,13 +53,17 @@ export const PostResponse = new GraphQLObjectType({
         parentPostId: {type: GraphQLID},
         image: {type: GraphQLString},
         community: {type: PostCommunity},
+        comments: {type: new GraphQLList(PostType)},
         user: {type: PostUser},
         topic: {type: GraphQLString},
         body: {type: GraphQLString},
+        likedBy: {type: new GraphQLList(GraphQLString)},
         createdBy: {type: GraphQLString},
         createdAt: {type: GraphQLString},
     }
 })
+
+
 
 
 

@@ -8,7 +8,7 @@ const PostComment = ({comment}:{comment: IPost}) => {
   return (
     <div className='mt-8'>
         <PostHeader post={comment}/>
-        <PostContent content={comment.body} image={comment.image.toString()} />
+        <PostContent content={comment.body} image={comment?.image?.toString()} />
         <PostReactions post={comment}/>
     </div>
   )

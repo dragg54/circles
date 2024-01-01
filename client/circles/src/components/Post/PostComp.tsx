@@ -12,7 +12,7 @@ import { fetchPosts } from "../../redux/Post"
 import { PostState } from "../../types/States"
 import { useEffect } from "react"
 
-const PostComp = ({ posts, width, loading }: { posts: IPost[], width: number | string, loading: boolean }) => {
+const PostComp = ({ posts, width, loading, type }: { posts: IPost[], width: number | string, loading: boolean, type: string }) => {
     const dispatch = useDispatch()
     const _posts = useSelector(state => (state as {
         post: IPost[]
@@ -34,7 +34,7 @@ const PostComp = ({ posts, width, loading }: { posts: IPost[], width: number | s
                                 <PostContent content={post.body} image={(post.image as string)} />
                             </Link>
                             <PostReactions post={post} />
-                            {post.comments && post.comments.map((comment) => {
+                            {type == 'post' && post.comments && post.comments.map((comment) => {
                                 return (
                                     <>
                                         <PostComment comment={comment} key={comment._id} />

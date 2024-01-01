@@ -3,6 +3,7 @@ import mongoose from "mongoose"
 export interface IPost{
     _id?: typeof mongoose.Schema.ObjectId,
     id?: string,
+    comments: IPost[],
     parentPostId?: string,
     topic?: string
     body?: string,

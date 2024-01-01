@@ -9,8 +9,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { isClosed } from './redux/GlobalModal'
 import Post from './pages/Post'
 import User from './pages/User'
-import Layout from './components/Layout'
 import { FormTypes } from './types/Form'
+import ProtectedRoute from './routes/ProtectedRoute'
+import PageNotFound from './pages/PageNotFound'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 function App() {
@@ -26,20 +27,21 @@ function App() {
   })
   return (
     <body className={`relative ${globalModal?.isOpened ? 'h-screen' : 'h-auto'} ${globalModal?.isOpened ? 'overflow-hidden' : ''}`}>
-      <div className={`absolute ${globalModal?.isOpened ? 'flex' : 'hidden'} bg-[rgba(220,220,220,0.7)]  w-screen z-50  h-full justify-center pt-24 items-start`} id='modal'>
+      <div className={`absolute ${globalModal?.isOpened ? 'flex' : 'hidden'} bg-[rgba(220,220,220,0.7)]   w-screen z-50  h-full justify-center pt-24`} id='modal'>
         <div className='w-2/5'>
           {globalModal?.formName == FormTypes.createForm || FormTypes.editForm ? <PostForm /> : ""}
         </div>
       </div>
       <Router>
         <Routes>
-        <Route path="/" element={<Home />} />
-          <Route path="/posts" element={<Home />} />
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+          <Route path="/posts" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/post/:id" element={<Post />} />
           <Route path="/user/:id" element={<User />} />
           <Route path="/currentUser/:id" element={<User />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
+          <Route path="/*" element={<PageNotFound />} />
         </Routes>
       </Router>
     </body>

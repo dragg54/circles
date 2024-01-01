@@ -23,19 +23,21 @@ export const CreateUser = {
     args: {
         userName: { type: GraphQLString },
         email: { type: GraphQLString },
+        bio: {type: GraphQLString},
         password: { type: GraphQLString },
         communities: { type: new GraphQLList(GraphQLID) },
         file: { type: GraphQLUpload }
     },
     async resolve(parent: any, args: any, context: any) {
-       const session = await mongoose.startSession()
         try {
-            session.startTransaction()
             const existingUser: unknown = await User.findOne({ email: args.email }).or([{ userName: args.userName }])
             if (existingUser) {
-                throw new DuplicateError("User already exists")
+                return new DuplicateError("User already exists")
             }
-            const imageUrl = await readFile(args.file)
+            let imageUrl: string
+            if(args.file){
+                imageUrl = await readFile(args.file)
+            }
             bcrypt
                 .genSalt(10)
                 .then(salt => {
@@ -52,26 +54,32 @@ export const CreateUser = {
                         createdAt: Date.now(),
                         createdBy: context.userId
                     })
-                    user.save({session})
-                    communities.forEach(async(comm: string)=>{
-                        await Community.findByIdAndUpdate({
+                    const newuser = await user.save()
+                    await Promise.all(communities.map(async(comm: string)=>{
+                        const community = await Community.findOne({
+                            _id: newuser._id
+                        })
+                        if(community){
+                            community
+                            console.log("yessss")
+                            return new Error("User already belongs to community")
+                        }
+                       const updatedCommunity = await Community.findByIdAndUpdate({
                             _id: comm
-                        },{ $push: { communityMembers: comm } },
+                        },{ $push: { communityMembers: newuser._id } },
                         { new: true })
-                    }, {session})
-                    await session.commitTransaction()
-                    session.endSession()
+                    }))
+
+                    return newuser
                    
                 })
                 .catch(async err => {
-                   await session.abortTransaction()
-                   session.endSession()
+                    console.log(err)
+                    return err
                 })
         }
         catch (err) {
-            console.log(err)
-
-            return new InternalServerError(err as string)
+            throw new InternalServerError(err as string)
         }
     }
 }
@@ -105,8 +113,7 @@ export const LoginUser = {
             return { status: "OK", token }
         }
         catch (err) {
-            console.log(err)
-            return err
+            throw err
         }
     }
 }

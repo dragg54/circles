@@ -38,7 +38,7 @@ const PostForm = () => {
             profilePic: ''
         },
         likedBy: [],
-        createdBy: currentUser.id,
+        createdBy: currentUser?.id,
         createdAt: Date.now(),
         dislikedBy: [],
         updatedAt: null,

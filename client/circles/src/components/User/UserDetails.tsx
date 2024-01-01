@@ -70,18 +70,18 @@ const {data: userCommunities, error: userCommunitiesError, loading: userCommunit
   
  
   return (
-    <div className='h-auto bg-white flex border-b w-full  px-3 mb-4 rounded-md border-b-4 border-l-4 shadow-md border-black'>
+    <div className='h-auto  flex bg-[#EFE7BC] w-full  px-3 mb-4 rounded-md border-b-4 border-l-4 shadow-md border-black'>
         <div className='w-1/6 h-full p-8'>
-            <ProfilePicture width={16} height={16} profilePicture={user?.user.profilePic}/>
+            <ProfilePicture width={20} height={20} profilePicture={user?.user.profilePic}/>
         </div>
         <div className='w-4/6 h-full flex flex-col items-start justify-start p-8'>
-            <h1 className='font-bold text-3xl'>{user?.user.userName}</h1>
-            <p className="text-gray-700 font-semibold">Seeking for knowledge through exposure to the inevitables...</p>
+            <h1 className='font-bold text-3xl '>{user?.user.userName}</h1>
+            <p className="text-green-700 font-semibold ">{user.user.bio}</p>
             <Follows />
         <ul className='flex gap-3 mt-4 text-gray-500 list-disc'>
           {userCommunities?.userCommunities.map((com: CommunityType)=>{
             return(
-              <li key={com._id} className='text-sm'>{com.communityName} <span className={`ml-2 ${userCommunities.userCommunities[userCommunities.userCommunities.length - 1] == com? 'hidden': ''}`}>|</span></li> 
+              <li key={com._id} className='text-sm'>{com.communityName}</li> 
             )
           })}
         </ul>

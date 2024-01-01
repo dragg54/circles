@@ -3,6 +3,7 @@ import ProfilePicture from "../ProfilePicture"
 import { IPost, PostCommunity } from "../../types/IPost"
 
 export const PostHeader = ({post}:{post:IPost}) => {
+    console.log(post)
     return (
         <div className='w-full flex justify-between items-center border-b border-gray-200 shadow-sm mb-4 pb-4'>
             <Link to={'/user/'+post.createdBy} className='items-center flex justify-between' >
