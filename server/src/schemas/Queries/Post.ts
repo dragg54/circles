@@ -35,6 +35,7 @@ export const GetCommunityPosts = {
         community: {type: new GraphQLList(GraphQLID)}
     },
     async resolve(parent:any, args: any){
+        console.log(args.community)
         try{
             const allPosts:unknown = await Post.find({
                 community:{

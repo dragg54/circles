@@ -1,10 +1,13 @@
 export enum Community{
-    Tech,
-    Music,
-    Politics,
-    Sport,
-    Education,
-    Business,
+    Tech = "Tech",
+    Music = "Music",
+    Politics = "Politics",
+    Sport = "Sport",
+    Education = "Education",
+    Business = "Business",
+    Fashion = "Fashion",
+    Movie = "Movie",
+    Travel = "Travel"
 }
 
 export type CommunityType = {

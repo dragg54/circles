@@ -5,6 +5,7 @@ export const GET_COMMUNITIES = gql`
         communities{
             _id
             communityName
+            communityDescription
         }
     }
 `
@@ -14,6 +15,26 @@ export const GET_USER_COMMUNITIES = gql`
         userCommunities(userId: $userId) {
         _id
         communityName
+        }
+    }
+`
+
+export const GET_COMMUNITY_POSTS = gql`
+    query GetCommunityPosts($communityId: [ID]){
+        allCommunityPosts(community: $communityId){
+            _id
+            topic
+            body
+            user{
+                _id
+                userName
+                profilePic
+            }
+            likedBy,
+            comments{
+                _id
+                body
+            }
         }
     }
 `

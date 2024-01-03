@@ -30,7 +30,7 @@ const Header = () => {
                     community: [e.target.value]
                 }})
                 
-                dispatch(fetchPosts({posts: response.data.allCommunityPosts}))
+                dispatch(fetchPosts({posts: response?.data?.allCommunityPosts}))
             }
         }  
         catch(err){

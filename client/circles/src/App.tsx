@@ -12,6 +12,7 @@ import User from './pages/User'
 import { FormTypes } from './types/Form'
 import ProtectedRoute from './routes/ProtectedRoute'
 import PageNotFound from './pages/PageNotFound'
+import Community from './pages/Community'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
           <Route path="/currentUser/:id" element={<User />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
+          <Route path="/community/:id" element={<Community />} />
           <Route path="/*" element={<PageNotFound />} />
         </Routes>
       </Router>
