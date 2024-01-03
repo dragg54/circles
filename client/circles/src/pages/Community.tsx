@@ -11,19 +11,21 @@ const Community = () => {
 
     const { data: communityPosts, error: communityPostError, loading: communityPostLoading } = useQuery(GET_COMMUNITY_POSTS, {
         variables: {
-            community: [id]
+            communityId: [id]
         }
     })
+
     if (communityPostLoading) {
         return < LoadingSpinner loading={communityPostLoading} />
     }
-    console.log("psst", communityPosts)
+
     return (
         <Layout>
-            <main className='w-screen h-auto flex flex-col justify-start items-center mt-32'></main>
+            <main className='w-screen h-auto flex flex-col justify-start items-center mt-32'>
             <div className='w-full flex flex-col justify-start items-center'>
-            <PostComp posts={communityPosts} loading={communityPostLoading} width={'full'} type='posts'/>
+                <PostComp posts={communityPosts.allCommunityPosts} loading={communityPostLoading} width={'full'} type='posts' />
             </div>
+            </main>
         </Layout>
     )
 }

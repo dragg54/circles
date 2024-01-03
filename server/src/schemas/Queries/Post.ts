@@ -35,7 +35,6 @@ export const GetCommunityPosts = {
         community: {type: new GraphQLList(GraphQLID)}
     },
     async resolve(parent:any, args: any){
-        console.log(args.community)
         try{
             const allPosts:unknown = await Post.find({
                 community:{
@@ -45,7 +44,6 @@ export const GetCommunityPosts = {
             .populate("user", "userName profilePic")
             .populate("community", "communityName")
             .lean()
-
             const _posts:IPost[] =[];
             (allPosts as IPost[]).forEach((post: IPost)=>{
                 if(!post.parentPostId){
@@ -53,7 +51,6 @@ export const GetCommunityPosts = {
                     _posts.push(_post)
                 } 
             })
-            console.log("post",_posts)
             return _posts
         }
         catch(err){

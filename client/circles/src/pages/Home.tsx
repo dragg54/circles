@@ -12,41 +12,40 @@ import PostComp from '../components/Post/PostComp'
 const Home = () => {
   type PostType = {
     post: IPost[]
-}
-type UserState = {
+  }
+  type UserState = {
     auth: UserAuth
-}
-const user = useSelector(state => (state as UserState).auth).user
- const { data, error, loading, refetch } = useQuery(GET_ALL_POSTS, {
+  }
+  const user = useSelector(state => (state as UserState).auth).user
+  const { data, error, loading, refetch } = useQuery(GET_ALL_POSTS, {
     variables: {
-        community: user?.communities?.map((comm) => (comm as CommunityType)._id)
+      community: user?.communities?.map((comm) => (comm as CommunityType)._id)
     }
-})
-useEffect(()=>{
-  refetch()
-}, [])
-const posts = useSelector(state => (state as PostType).post)
-if (loading || !posts) {
+  })
+  useEffect(() => {
+    refetch()
+  }, [])
+  const posts = useSelector(state => (state as PostType).post)
+  if (loading || !posts) {
     return <LoadingSpinner {...{ loading }} />
-}
-console.log(data)
-  const Post = lazy(()=> import('../components/Post/PostComp'))
+  }
+  const Post = lazy(() => import('../components/Post/PostComp'))
   return (
-     <Layout>
+    <Layout>
       <main className='w-screen h-auto flex flex-col justify-start items-center mt-32'>
-      <div className='w-full flex flex-col justify-start items-center'>
-       {/* <Suspense fallback={< FallBackLoader />}>
+        <div className='w-full flex flex-col justify-start items-center'>
+          {/* <Suspense fallback={< FallBackLoader />}>
        <Post  width={"full"} posts={data.allCommunityPosts} loading={loading}/>
        </Suspense> */}
-       <PostComp type='posts' width={'full'} loading={loading} posts={data.allCommunityPosts}/>
-      </div>
-    </main>
-     </Layout>
+          <PostComp type='posts' width={'full'} loading={loading} posts={data.allCommunityPosts} />
+        </div>
+      </main>
+    </Layout>
   )
 }
 
-const FallBackLoader = () =>{
-  return(
+const FallBackLoader = () => {
+  return (
     <>Loading</>
   )
 }

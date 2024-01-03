@@ -30,6 +30,10 @@ export const GET_COMMUNITY_POSTS = gql`
                 userName
                 profilePic
             }
+            community{
+                _id
+                communityName
+            }
             likedBy,
             comments{
                 _id

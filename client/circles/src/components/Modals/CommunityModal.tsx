@@ -3,6 +3,7 @@ import React, { ChangeEvent } from 'react'
 import { GET_USER_COMMUNITIES } from '../../graphql/queries/community'
 import { CommunityType } from '../../types/Community'
 import LoadingSpinner from '../Loaders/LoadingSpinner'
+import { useParams } from 'react-router-dom'
 
 export const CommunityModal = ({ communitySelectedHeading, name, handleformChange, value }: { communitySelectedHeading: string, name: string, handleformChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void, value: string }) => {
     const { data: community, error, loading } = useQuery(GET_USER_COMMUNITIES)
@@ -10,11 +11,12 @@ export const CommunityModal = ({ communitySelectedHeading, name, handleformChang
 
         <LoadingSpinner loading />
     }
+    const {id} = useParams()
     if (!loading && !error) {
         return (
             <div className="relative inline-block w-64">
                 <select className="text-gray-400 block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" value={value} onChange={(e) => handleformChange(e)} name={name}>
-                    <option value="">{communitySelectedHeading}</option>
+                    <option value="">{id? community.userCommunities.find((comm: { _id: string }) => comm._id == id).communityName : communitySelectedHeading}</option>
                     {community.userCommunities.map((comm: CommunityType) => {
                         return (
                             <>
