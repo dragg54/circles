@@ -13,5 +13,6 @@ export enum Community{
 export type CommunityType = {
     _id: string,
     communityName: string,
-    communityMembers: string[]
+    communityMembers: string[],
+    communityDescription: string
 }

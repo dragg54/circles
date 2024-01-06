@@ -23,7 +23,7 @@ export const CreateUser = {
     args: {
         userName: { type: GraphQLString },
         email: { type: GraphQLString },
-        bio: {type: GraphQLString},
+        bio: { type: GraphQLString },
         password: { type: GraphQLString },
         communities: { type: new GraphQLList(GraphQLID) },
         file: { type: GraphQLUpload }
@@ -35,7 +35,7 @@ export const CreateUser = {
                 return new DuplicateError("User already exists")
             }
             let imageUrl: string
-            if(args.file){
+            if (args.file) {
                 imageUrl = await readFile(args.file)
             }
             bcrypt
@@ -55,23 +55,21 @@ export const CreateUser = {
                         createdBy: context.userId
                     })
                     const newuser = await user.save()
-                    await Promise.all(communities.map(async(comm: string)=>{
+                    await Promise.all(communities.map(async (comm: string) => {
                         const community = await Community.findOne({
                             _id: newuser._id
                         })
-                        if(community){
-                            community
-                            console.log("yessss")
+                        if (community) {
                             return new Error("User already belongs to community")
                         }
-                       const updatedCommunity = await Community.findByIdAndUpdate({
+                        const updatedCommunity = await Community.findByIdAndUpdate({
                             _id: comm
-                        },{ $push: { communityMembers: newuser._id } },
-                        { new: true })
+                        }, { $push: { communityMembers: newuser._id } },
+                            { new: true })
                     }))
 
                     return newuser
-                   
+
                 })
                 .catch(async err => {
                     console.log(err)
@@ -107,7 +105,7 @@ export const LoginUser = {
                 communityMembers: {
                     $in: [existingUser._id]
                 }
-            }).select("_id")
+            })
             const token = jwt.sign({ id: existingUser._id, email: existingUser.email, userName: existingUser.userName, bio: existingUser.bio, profilePicture: existingUser.profilePic, communities: userCommunities }, process.env.SECRET_KEY!)
             context().res.cookie('auth', token, { maxAge: 3600000, httpOnly: true, sameSite: "lax" })
             return { status: "OK", token }

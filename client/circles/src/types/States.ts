@@ -1,3 +1,4 @@
+import { CommunityType } from "./Community"
 import { IPost, PostCommunity } from "./IPost"
 import { UserAuth } from "./User"
 
@@ -7,7 +8,8 @@ export type AuthState = {
             id: string,
             userName: string,
             token: string,
-            profilePicture: string
+            profilePicture: string,
+            communities: CommunityType[]
         }
     }
 }

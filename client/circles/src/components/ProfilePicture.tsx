@@ -13,7 +13,7 @@ const ProfilePicture = ({width, height, profilePicture, id}:{width: number, heig
     )
   }
   return (
-    <div className={`w-${width} h-${height} rounded-full object-cover overflow-hidden flex justify-center items-center cursor-pointer`} >
+    <div className={`w-12 h-12 rounded-full object-cover overflow-hidden flex justify-center items-center cursor-pointer`} >
         {profilePicture ? <img src={profilePicture && 'http://'+profilePicture} className='w-full h-full rounded-full' id={id} alt="" />:<AlternativeImage />}
     </div>
   )

@@ -5,11 +5,13 @@ import { MdHowToVote, MdOutlineSportsSoccer } from "react-icons/md";
 import { SiHtmlacademy } from "react-icons/si";
 import { TbBusinessplan } from "react-icons/tb";
 import { Community } from "../types/Community";
+import { BsMusicPlayer } from "react-icons/bs";
+
 
 export const commmunityData = [
     {
         communityName: Community.Movie,
-        communityIcon: <FiMusic />
+        communityIcon: <FiMusic />,
     },
     {
         communityName: Community.Politics,
@@ -18,6 +20,10 @@ export const commmunityData = [
     {
         communityName:Community.Education,
         communityIcon: <SiHtmlacademy />
+    },
+    {
+        communityName:Community.Music,
+        communityIcon: <BsMusicPlayer />
     },
     {
         communityName: Community.Sport,

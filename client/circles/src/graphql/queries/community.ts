@@ -15,6 +15,20 @@ export const GET_USER_COMMUNITIES = gql`
         userCommunities(userId: $userId) {
         _id
         communityName
+        communityDescription
+        }
+    }
+`
+
+export const GET_COMMUNITY = gql`
+    query GetCommunity($id: ID){
+        community(id: $id) {
+        _id
+        communityName
+        communityDescription
+        communityMembers{
+            _id
+        }
         }
     }
 `
@@ -25,6 +39,7 @@ export const GET_COMMUNITY_POSTS = gql`
             _id
             topic
             body
+            image
             user{
                 _id
                 userName

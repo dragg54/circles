@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PostState } from "../types/States";
-import { IPost, PostComment } from "../types/IPost";
-import PostComment from "../components/Post/PostComment";
+import { IPost } from "../types/IPost";
 
 const postSlice = createSlice({
     name: 'post',
@@ -58,7 +57,13 @@ const postSlice = createSlice({
         addComment:(state, action:{payload: {comment:IPost}})=>{
            state[0].comments.push(action.payload.comment)
             return state
-        }
+        },
+        
+    check:()=>{
+        console.log("hello")
+  
+      },
+  
     },
 });
 

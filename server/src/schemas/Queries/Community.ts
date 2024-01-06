@@ -40,7 +40,7 @@ export const GetCommunitiesById = {
     args: {id: {type: GraphQLID}},
     async resolve(parent: any, args: any) {
         try {
-            const community = await Community.find({ _id: args.id })
+            const community = await Community.findOne({ _id: args.id })
             return community
         }
         catch (err) {

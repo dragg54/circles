@@ -37,7 +37,7 @@ const Home = () => {
           {/* <Suspense fallback={< FallBackLoader />}>
        <Post  width={"full"} posts={data.allCommunityPosts} loading={loading}/>
        </Suspense> */}
-          <PostComp type='posts' width={'full'} loading={loading} posts={data.allCommunityPosts} />
+          <PostComp type='posts' width={'full'} loading={loading} posts={data?.allCommunityPosts} />
         </div>
       </main>
     </Layout>

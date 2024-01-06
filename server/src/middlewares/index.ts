@@ -12,6 +12,7 @@ export const middleWare = {
         follow: IsAuthenticated,
         unfollow: IsAuthenticated,
         likePost: IsAuthenticated,
+        leaveCommunity: IsAuthenticated,
         unlikePost: IsAuthenticated
     },
     RootQuery:{

@@ -7,6 +7,8 @@ import { Context } from "../../types/Context"
 import { GetCommunitiesById } from "../Queries/Community"
 import { ICommunity } from "../../types/ICommunity"
 import { SuccessResponse } from "../Typedefs/Response"
+import { error } from "console"
+import mongoose from "mongoose"
 
 export const CreateCommunity = {
     type: CommunityType,
@@ -100,27 +102,64 @@ export const AddCommunityMembers = {
 export const JoinCommunities = {
     type: SuccessResponse,
     args: {
-        communityId: {type: new GraphQLList(GraphQLID)},
-        userId: {type: GraphQLID}
+        communityId: { type: new GraphQLList(GraphQLID) },
     },
-    async resolve(parent: any, args: any, context: Context){
-       try{
-        args.communityId.forEach((community: ICommunity)=>{
-            if(community.communityMembers?.includes((context().req as UserLoginRequest).user.id)){
-                throw new Error(`User is already a member of community with id ${community}`)
-            }            
-            const comm =  Community.updateMany(community , {
-                $push:{
-                    communityMembers: args.userId
+    async resolve(parent: any, args: any, context: Context) {
+        console.log(args)
+        try {
+            Promise.all(args.communityId.map(async(community: ICommunity) => {
+                const comm = await Community.findOne({
+                    _id: args.communityId[0]
+                })
+                if(!comm){
+                    throw new Error(`Community with id ${args.communityId[0]} does not exist`)
+                }
+                if ((comm.communityMembers as unknown[])?.includes((context().req as UserLoginRequest).user.id)) {
+                    throw new Error(`User is already a member of community with id ${community}`)
+                }
+                 await Community.findByIdAndUpdate({_id: community}, {
+                    $push: {
+                        communityMembers: (context().req as UserLoginRequest).user.id
+                    }
+                }, { new: true })
+            }))
+            return { msg: "User added to communities" }
+        }
+        catch (err) {
+            console.log(err)
+            return err
+        }
+    }
+}
+
+export const LeaveCommunity = {
+    type: SuccessResponse,
+    args: {
+        communityId: { type: GraphQLID }
+    },
+    async resolve(parent: any, args: any, context: Context) {
+        try {
+            const existingCommunity: ICommunity = await Community.findOne({
+                _id: args.communityId
+            })
+            if (!existingCommunity) {
+                return new Error("community does not exist")
+            }
+            console.log("user", (context().req as UserLoginRequest).user)
+            if (!existingCommunity.communityMembers.includes((context().req as UserLoginRequest).user.id)) {
+                return new Error(`user is not a member of ${existingCommunity.communityName} community`)
+            }
+           await Community.findByIdAndUpdate(args.communityId, {
+                $pull: {
+                    communityMembers: (context().req as UserLoginRequest).user.id
                 }
             }, {new: true})
-        })
-        return {msg: "User added to communities"}
-    }
-       catch(err){
-        console.log(err)
-        return(err)
-       }
+            return { msg: "User removed to communities" }
+        }
+        catch (err) {
+            console.log(err)
+            return (err)
+        }
     }
 }
 
@@ -136,7 +175,6 @@ export const RemoveCommunityMember = {
             if (community) {
                 const userIdx: number = community?.communityMembers.findIndex((usr: any) => usr == args.userId)!
                 community.communityMembers.splice(userIdx, 1)
-                console.log(community.communityMembers)
                 await Community.findOneAndUpdate({ _id: args.communityId }, { communityMembers: community.communityMembers })
                 return "User removed"
             }

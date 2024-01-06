@@ -56,7 +56,6 @@ const {data: userCommunities, error: userCommunitiesError, loading: userCommunit
           userId: user.user._id
         }
       })
-      console.log(resp)
     }
     else{
       const resp =await unFollowUserMutation({
@@ -64,7 +63,6 @@ const {data: userCommunities, error: userCommunitiesError, loading: userCommunit
           userId: user.user._id
         }
       })
-      console.log(resp)
     }
   }
   

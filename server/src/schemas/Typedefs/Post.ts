@@ -4,7 +4,8 @@ const PostCommunity = new GraphQLObjectType({
     name:"PostCommunity",
     fields:{
         _id: {type: GraphQLString},
-        communityName: {type: GraphQLString}
+        communityName: {type: GraphQLString},
+        communityDescription: {type: GraphQLString}
     }
 })
 

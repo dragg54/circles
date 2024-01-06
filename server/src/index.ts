@@ -13,9 +13,12 @@ import { applyMiddleware } from 'graphql-middleware'
 import { middleWare } from './middlewares'
 import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
+import http from 'http'
 
 
 const app = express()
+const server = http.createServer(app);
+
 
 app.use(morgan('tiny'));
 // app.use(cors({
@@ -58,5 +61,13 @@ const port = process.env.PORT
 app.listen(port, () => {
     console.log(`listening to port ${port}`)
 })
+
+process.on('unhandledRejection', (err:{message: string, name: string}) => {
+    console.log('UNHANDLED REJECTION! 💥 Shutting down...');
+    console.log(err.name, err.message, err);
+    server.close(() => {
+      process.exit(1);
+    });
+  });
 
 

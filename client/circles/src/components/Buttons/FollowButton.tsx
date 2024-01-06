@@ -1,11 +1,12 @@
 import React from 'react'
-import Button from './index'
-import { BiPlus } from 'react-icons/bi'
+import { RiUserAddFill } from 'react-icons/ri'
+import { check } from '../../redux/User'
 
 const FollowButton = ({type}:{type: string}) => {
   return (
-    <button className='bg-gray-700 text-white flex gap-2 text-xs px-2 p-1 rounded-md font-bold items-center'>
-        {type=="join"? "Join": "Follow"}<BiPlus />
+    <button onClick={()=>{
+    }} className='bg-gray-700 text-white flex gap-2 text-xs px-2 p-1 rounded-md font-bold items-center'>
+       <RiUserAddFill /> {type=="join"? "Join": "Follow"}
     </button>
   )
 }

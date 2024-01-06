@@ -2,7 +2,7 @@ import React from 'react'
 import Layout from '../components/Layout'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
-import { GET_COMMUNITIES, GET_COMMUNITY_POSTS } from '../graphql/queries/community'
+import { GET_COMMUNITY_POSTS } from '../graphql/queries/community'
 import LoadingSpinner from '../components/Loaders/LoadingSpinner'
 import PostComp from '../components/Post/PostComp'
 

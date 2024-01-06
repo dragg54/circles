@@ -19,7 +19,6 @@ const UserPosts = ({width}: {width: string}) => {
     if (loading){
         return <p>Loading</p>
     }
-    console.log("posts", posts)
     return (
         <>
         {!loading && posts &&  posts.postsByUser.map((post: IPost) => {
