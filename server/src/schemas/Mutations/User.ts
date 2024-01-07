@@ -1,6 +1,6 @@
 import { GraphQLID, GraphQLList, GraphQLScalarType, GraphQLString } from "graphql";
 import { UserLoginResponse, UserType } from "../Typedefs/User";
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { IUser, UserLoginRequest } from "../../types/User";
 import { User } from "../../models/User";
 import { DuplicateError, InternalServerError, NotFoundError } from "../../types/Error";
